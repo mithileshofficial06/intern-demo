@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client'
-import { PrismaNeonHttp } from '@prisma/adapter-neon'
+import { PrismaNeon } from '@prisma/adapter-neon'
 
 declare global {
   // eslint-disable-next-line no-var
@@ -12,9 +12,9 @@ if (!connectionString) {
   throw new Error('DATABASE_URL environment variable is not set')
 }
 
-// PrismaNeonHttp uses Neon's HTTP protocol — no WebSocket/ws needed,
-// works in Next.js API routes and serverless functions out of the box.
-const adapter = new PrismaNeonHttp(connectionString)
+// PrismaNeon uses Neon's WebSocket pooling protocol — works in Next.js API routes
+// PrismaNeonHttp requires a non-optional options object in this version, so we use PrismaNeon
+const adapter = new PrismaNeon({ connectionString })
 
 export const prisma = global.prisma ?? new PrismaClient({ adapter })
 

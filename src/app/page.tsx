@@ -202,7 +202,6 @@ export default function Home() {
                   APP
                   <span className="brutal-highlight">FORGE</span>
                 </h2>
-                <span className="brutal-tag bg-white mt-3">BETA v0.1</span>
               </div>
               <div className="brutal-box bg-black text-[#ffe600] px-3 py-2 text-xs font-mono font-bold leading-tight text-right">
                 JSON
@@ -251,20 +250,20 @@ export default function Home() {
         >
           <div className="absolute inset-0 brutal-checker pointer-events-none opacity-50" />
 
-          <div className="relative z-10 flex flex-col flex-1 p-6 lg:p-10 xl:p-12">
+          <div className="relative z-10 flex flex-col h-full p-6 lg:p-10 xl:p-12">
             {/* Editor header */}
             <motion.div
               initial={{ opacity: 0, x: -15 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.4, delay: 0.3 }}
-              className="flex items-center justify-between mb-4"
+              className="flex items-center justify-between mb-4 shrink-0"
             >
               <span className="text-xs font-black uppercase tracking-[0.25em] text-white/70 font-mono">
                 {'>'} YOUR_CONFIG.JSON
               </span>
             </motion.div>
 
-            {/* Code Editor */}
+            {/* Code Editor — grows to fill all available space */}
             <CodeEditor
               value={jsonInput}
               onChange={setJsonInput}
@@ -272,21 +271,23 @@ export default function Home() {
             />
 
             {/* Live Preview */}
-            <LivePreview jsonInput={jsonInput} isValid={isValidJson} />
+            <div className="shrink-0">
+              <LivePreview jsonInput={jsonInput} isValid={isValidJson} />
+            </div>
 
             {/* Error */}
             {error && (
               <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="mt-4 brutal-box-red p-4 text-sm font-black uppercase tracking-wide animate-brutal-shake"
+                className="shrink-0 mt-4 brutal-box-red p-4 text-sm font-black uppercase tracking-wide animate-brutal-shake"
               >
                 ⚠ {error}
               </motion.div>
             )}
 
             {/* Generate Button */}
-            <div className="mt-5">
+            <div className="mt-5 shrink-0">
               <GenerateButton
                 onGenerate={handleSubmit}
                 disabled={!isValidJson}

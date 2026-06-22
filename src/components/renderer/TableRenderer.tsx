@@ -10,14 +10,14 @@ interface TableRendererProps {
   onAddNew?: () => void
 }
 
-interface Record {
+interface AppRecord {
   id: string
   data: Record<string, unknown>
   createdAt: string
 }
 
 export default function TableRenderer({ entity, appId, onAddNew }: TableRendererProps) {
-  const [records, setRecords] = useState<Record[]>([])
+  const [records, setRecords] = useState<AppRecord[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 

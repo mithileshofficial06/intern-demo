@@ -4,8 +4,10 @@ import { useEffect, useRef, useState, useCallback } from 'react'
 import { motion } from 'framer-motion'
 import gsap from 'gsap'
 
-const LINE_1 = 'BUILD APPS'
-const LINE_2 = 'FROM CONFIG'
+const LINE_1 = 'BUILD'
+const LINE_2 = 'APPS'
+const LINE_3 = 'FROM'
+const LINE_4 = 'CONFIG'
 
 function GlitchText({ text, delay = 0 }: { text: string; delay?: number }) {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -112,8 +114,12 @@ export default function HeroSection() {
       <h1 className="text-4xl sm:text-5xl xl:text-7xl font-black leading-[0.92] tracking-tighter uppercase">
         <GlitchText text={LINE_1} delay={0.2} />
         <br />
+        <GlitchText text={LINE_2} delay={0.4} />
+        <br />
+        <GlitchText text={LINE_3} delay={0.6} />
+        <br />
         <span className="inline-flex items-baseline gap-2">
-          <GlitchText text={LINE_2} delay={0.5} />
+          <GlitchText text={LINE_4} delay={0.8} />
           <span className="animate-brutal-blink text-[#ff2d2d] text-3xl sm:text-4xl xl:text-5xl">_</span>
         </span>
       </h1>
