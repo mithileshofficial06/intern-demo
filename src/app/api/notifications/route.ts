@@ -57,7 +57,7 @@ export async function POST(request: Request) {
         select: { id: true },
       })
       await prisma.notification.deleteMany({
-        where: { id: { in: oldest.map((n) => n.id) } },
+        where: { id: { in: oldest.map((n: { id: string }) => n.id) } },
       })
     }
 
