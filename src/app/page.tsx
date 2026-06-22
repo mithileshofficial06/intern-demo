@@ -1,24 +1,8 @@
 'use client'
 
-import { useState, useEffect, useCallback, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { safeValidateConfig } from '@/lib/config-validator'
-import {
-  Zap,
-  RefreshCw,
-  Shield,
-  CheckCircle2,
-  AlertCircle,
-  Sparkles,
-  Code2,
-  ArrowRight,
-  Layers,
-  Box,
-  Users,
-  FileText,
-  Terminal,
-  Rocket,
-} from 'lucide-react'
 
 const defaultJsonInput = `{
   "app": "Task Manager",
@@ -100,74 +84,35 @@ const TEMPLATE_DATA: Record<string, string> = {
 }
 
 const FEATURES = [
-  { icon: Zap, title: 'Dynamic forms', desc: 'Auto-generated from schema' },
-  { icon: RefreshCw, title: 'CRUD APIs', desc: 'REST endpoints included' },
-  { icon: Shield, title: 'Error handling', desc: 'Graceful fallbacks built-in' },
+  { num: '01', title: 'DYNAMIC FORMS', desc: 'Generated from your schema. No hand-coding.' },
+  { num: '02', title: 'CRUD APIs', desc: 'REST endpoints. Wired up automatically.' },
+  { num: '03', title: 'ERROR HANDLING', desc: 'Broken schemas? We deal with it.' },
 ]
 
-const TEMPLATES = [
-  { name: 'Task Manager', icon: CheckCircle2 },
-  { name: 'Inventory', icon: Box },
-  { name: 'Blog CMS', icon: FileText },
-  { name: 'CRM', icon: Users },
+const TEMPLATES = ['Task Manager', 'Inventory', 'Blog CMS', 'CRM']
+
+const MARQUEE = [
+  'JSON ONLY',
+  'ZERO BOILERPLATE',
+  'INSTANT DEPLOY',
+  'NO BACKEND CODE',
+  'SCHEMA DRIVEN',
+  'RAW POWER',
+  'BUILD NOW',
+  'NO EXCUSES',
 ]
 
-const MARQUEE_ITEMS = [
-  'Zero boilerplate',
-  'Instant deploy',
-  'Schema-driven',
-  'Type-safe',
-  'Auto CRUD',
-  'Live preview',
-  'No backend code',
-  'JSON only',
-]
-
-function AuroraBackground() {
+function BrutalMarquee() {
+  const items = [...MARQUEE, ...MARQUEE]
   return (
-    <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
-      <div className="absolute inset-0 bg-[#050508]" />
-      <div
-        className="absolute top-[-20%] left-[-10%] w-[60vw] h-[60vw] rounded-full animate-aurora-1"
-        style={{
-          background: 'radial-gradient(circle, rgba(124,58,237,0.35) 0%, transparent 70%)',
-          animation: 'aurora-1 12s ease-in-out infinite, glow-pulse 8s ease-in-out infinite',
-        }}
-      />
-      <div
-        className="absolute top-[30%] right-[-15%] w-[50vw] h-[50vw] rounded-full animate-aurora-2"
-        style={{
-          background: 'radial-gradient(circle, rgba(6,182,212,0.25) 0%, transparent 70%)',
-        }}
-      />
-      <div
-        className="absolute bottom-[-10%] left-[20%] w-[45vw] h-[45vw] rounded-full animate-aurora-3"
-        style={{
-          background: 'radial-gradient(circle, rgba(236,72,153,0.2) 0%, transparent 70%)',
-        }}
-      />
-      <div
-        className="absolute inset-0 opacity-[0.04]"
-        style={{
-          backgroundImage: 'radial-gradient(circle at 1px 1px, white 1px, transparent 0)',
-          backgroundSize: '40px 40px',
-        }}
-      />
-    </div>
-  )
-}
-
-function MarqueeStrip() {
-  const items = [...MARQUEE_ITEMS, ...MARQUEE_ITEMS]
-  return (
-    <div className="relative overflow-hidden border-y border-white/5 py-3 mb-12 opacity-0 animate-fade-in" style={{ animationDelay: '600ms' }}>
-      <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-[#050508] to-transparent z-10" />
-      <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-[#050508] to-transparent z-10" />
-      <div className="flex marquee-track w-max gap-8">
+    <div className="brutal-border bg-black text-[#ffe600] py-2.5 overflow-hidden border-x-0">
+      <div className="flex animate-brutal-marquee w-max gap-10">
         {items.map((item, i) => (
-          <span key={i} className="flex items-center gap-2 text-xs font-medium uppercase tracking-[0.2em] text-white/30 whitespace-nowrap">
-            <Sparkles className="w-3 h-3 text-violet-400/60" />
-            {item}
+          <span
+            key={i}
+            className="text-sm font-black uppercase tracking-[0.25em] whitespace-nowrap font-mono"
+          >
+            ★ {item} ★
           </span>
         ))}
       </div>
@@ -181,9 +126,6 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null)
   const [isValidJson, setIsValidJson] = useState(true)
   const [activeTemplate, setActiveTemplate] = useState('Task Manager')
-  const [editorFocused, setEditorFocused] = useState(false)
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
-  const editorRef = useRef<HTMLDivElement>(null)
   const router = useRouter()
 
   useEffect(() => {
@@ -196,12 +138,6 @@ export default function Home() {
       }
     }
   }, [jsonInput])
-
-  const handleMouseMove = useCallback((e: React.MouseEvent) => {
-    if (!editorRef.current) return
-    const rect = editorRef.current.getBoundingClientRect()
-    setMousePos({ x: e.clientX - rect.left, y: e.clientY - rect.top })
-  }, [])
 
   const loadTemplate = (name: string) => {
     setActiveTemplate(name)
@@ -217,12 +153,12 @@ export default function Home() {
       try {
         parsedJson = JSON.parse(jsonInput)
       } catch {
-        setError('Invalid JSON: please check your syntax')
+        setError('INVALID JSON — FIX YOUR SYNTAX')
         return
       }
       const validationResult = safeValidateConfig(parsedJson)
       if (!validationResult.success) {
-        setError(validationResult.error)
+        setError(validationResult.error.toUpperCase())
         return
       }
       const response = await fetch('/api/runtime/register', {
@@ -231,142 +167,137 @@ export default function Home() {
         body: JSON.stringify(parsedJson),
       })
       if (!response.ok) {
-        setError('Failed to register app')
+        setError('FAILED TO REGISTER APP')
         return
       }
       const { appId } = await response.json()
       router.push(`/${appId}`)
     } catch (err) {
-      setError('An unexpected error occurred')
+      setError('UNEXPECTED ERROR OCCURRED')
       console.error('Error submitting config:', err)
     } finally {
       setLoading(false)
     }
   }
 
-  const lineCount = jsonInput.split('\n').length
+  const lines = jsonInput.split('\n')
 
   return (
-    <div className="relative min-h-screen text-white">
-      <AuroraBackground />
+    <div className="min-h-screen flex flex-col">
+      <BrutalMarquee />
 
-      {/* Nav */}
-      <nav
-        className="relative z-20 flex items-center justify-between max-w-6xl mx-auto px-6 pt-6 opacity-0 animate-fade-in-up"
-        style={{ animationDelay: '100ms' }}
-      >
-        <div className="flex items-center gap-3">
-          <div className="flex items-center justify-center w-9 h-9 rounded-xl bg-gradient-to-br from-violet-500 to-cyan-400 shadow-lg shadow-violet-500/30">
-            <Layers className="w-4.5 h-4.5 text-white" />
-          </div>
-          <span className="font-bold text-lg tracking-tight">AppForge</span>
-          <span className="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-full bg-violet-500/20 text-violet-300 border border-violet-500/30">
-            Beta
-          </span>
-        </div>
-        <div className="hidden sm:flex items-center gap-2 text-xs text-white/40">
-          <Terminal className="w-3.5 h-3.5" />
-          JSON → Live App
-        </div>
-      </nav>
+      <div className="flex flex-col lg:flex-row flex-1 min-h-0">
+        {/* ── LEFT: yellow brutal panel ── */}
+        <div className="relative w-full lg:w-[42%] bg-[#ffe600] brutal-border border-t-0 border-l-0 border-b-0 flex flex-col">
+          <div className="absolute inset-0 brutal-checker pointer-events-none" />
 
-      <main className="relative z-10 max-w-6xl mx-auto px-6 pb-16">
-        {/* Hero */}
-        <section className="text-center pt-14 pb-6">
-          <div
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-panel text-violet-300 text-xs font-semibold mb-8 opacity-0 animate-fade-in-up"
-            style={{ animationDelay: '200ms' }}
-          >
-            <Rocket className="w-3.5 h-3.5" />
-            No code required — just JSON
-          </div>
+          {/* Header */}
+          <header className="relative z-10 p-6 lg:p-8 border-b-4 border-black animate-brutal-slide">
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <h2 className="text-3xl font-black tracking-tighter leading-none">
+                  APP
+                  <span className="brutal-highlight">FORGE</span>
+                </h2>
+                <span className="brutal-tag bg-white mt-3">BETA v0.1</span>
+              </div>
+              <div className="brutal-box bg-black text-[#ffe600] px-3 py-2 text-xs font-mono font-bold leading-tight text-right">
+                JSON
+                <br />
+                → APP
+              </div>
+            </div>
+          </header>
 
-          <h1
-            className="text-5xl sm:text-6xl lg:text-7xl font-black tracking-tight leading-[1.05] opacity-0 animate-fade-in-up"
-            style={{ animationDelay: '350ms' }}
-          >
-            Build apps from
-            <br />
-            <span className="animate-gradient-text">config.</span>
-          </h1>
+          {/* Hero */}
+          <div className="relative z-10 flex-1 p-6 lg:p-8 flex flex-col justify-center">
+            <p
+              className="text-xs font-black uppercase tracking-[0.3em] mb-4 opacity-0 animate-brutal-drop"
+              style={{ animationDelay: '100ms', animationFillMode: 'forwards' }}
+            >
+              // NO CODE REQUIRED
+            </p>
 
-          <p
-            className="mt-6 text-lg text-white/50 max-w-xl mx-auto leading-relaxed opacity-0 animate-fade-in-up"
-            style={{ animationDelay: '500ms' }}
-          >
-            Paste a JSON schema. Get a fully working app with forms, tables, and APIs — instantly.
-          </p>
-        </section>
+            <h1
+              className="text-4xl sm:text-5xl xl:text-6xl font-black leading-[0.95] tracking-tighter uppercase opacity-0 animate-brutal-drop"
+              style={{ animationDelay: '200ms', animationFillMode: 'forwards' }}
+            >
+              BUILD APPS
+              <br />
+              FROM{' '}
+              <span className="brutal-underline">CONFIG</span>
+              <span className="animate-brutal-blink">_</span>
+            </h1>
 
-        <MarqueeStrip />
+            <p
+              className="mt-5 text-base font-bold max-w-sm leading-snug opacity-0 animate-brutal-drop"
+              style={{ animationDelay: '300ms', animationFillMode: 'forwards' }}
+            >
+              Paste JSON. Get forms, tables, APIs. Done. No frameworks. No nonsense.
+            </p>
 
-        {/* Bento grid: features + editor */}
-        <div className="grid lg:grid-cols-5 gap-5">
-          {/* Left bento column */}
-          <div className="lg:col-span-2 flex flex-col gap-5">
-            {/* Feature cards */}
-            {FEATURES.map((f, i) => {
-              const Icon = f.icon
-              return (
+            {/* Features */}
+            <div className="mt-8 space-y-3">
+              {FEATURES.map((f, i) => (
                 <div
-                  key={f.title}
-                  className="glass-panel rounded-2xl p-5 flex items-start gap-4 transition-all duration-300 hover:bg-white/[0.07] hover:border-white/15 hover:-translate-y-0.5 opacity-0 animate-fade-in-up group"
-                  style={{ animationDelay: `${700 + i * 100}ms` }}
+                  key={f.num}
+                  className="brutal-box p-4 flex gap-4 opacity-0 animate-brutal-slide hover:translate-x-1 transition-transform"
+                  style={{ animationDelay: `${400 + i * 80}ms`, animationFillMode: 'forwards' }}
                 >
-                  <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500/20 to-cyan-500/10 border border-violet-500/20 shrink-0 transition-transform duration-300 group-hover:scale-110">
-                    <Icon className="w-5 h-5 text-violet-400" />
-                  </div>
+                  <span className="font-mono font-black text-2xl leading-none text-[#ff2d2d]">
+                    {f.num}
+                  </span>
                   <div>
-                    <h3 className="font-semibold text-white/90">{f.title}</h3>
-                    <p className="text-sm text-white/40 mt-0.5">{f.desc}</p>
+                    <h3 className="font-black text-sm tracking-wide">{f.title}</h3>
+                    <p className="text-xs font-bold mt-0.5 opacity-70">{f.desc}</p>
                   </div>
                 </div>
-              )
-            })}
+              ))}
+            </div>
 
-            {/* Stats row */}
+            {/* Stats */}
             <div
-              className="glass-panel rounded-2xl p-5 grid grid-cols-3 gap-3 opacity-0 animate-fade-in-up"
-              style={{ animationDelay: '1000ms' }}
+              className="mt-6 grid grid-cols-3 gap-0 brutal-border bg-black text-[#ffe600] opacity-0 animate-brutal-drop"
+              style={{ animationDelay: '650ms', animationFillMode: 'forwards' }}
             >
               {[
-                { val: '0', label: 'Lines of code' },
-                { val: '<1s', label: 'Build time' },
-                { val: '99.9%', label: 'Uptime' },
-              ].map((s) => (
-                <div key={s.label} className="text-center">
-                  <div className="text-xl font-bold bg-gradient-to-r from-violet-400 to-cyan-400 bg-clip-text text-transparent">
-                    {s.val}
-                  </div>
-                  <div className="text-[10px] text-white/30 mt-1 uppercase tracking-wider">{s.label}</div>
+                { val: '0', label: 'LOC' },
+                { val: '<1s', label: 'BUILD' },
+                { val: '99%', label: 'UP' },
+              ].map((s, i) => (
+                <div
+                  key={s.label}
+                  className={`p-3 text-center ${i < 2 ? 'border-r-4 border-[#ffe600]' : ''}`}
+                >
+                  <div className="text-2xl font-black font-mono">{s.val}</div>
+                  <div className="text-[10px] font-black tracking-widest mt-0.5">{s.label}</div>
                 </div>
               ))}
             </div>
 
             {/* Templates */}
             <div
-              className="glass-panel rounded-2xl p-5 opacity-0 animate-fade-in-up"
-              style={{ animationDelay: '1100ms' }}
+              className="mt-6 opacity-0 animate-brutal-drop"
+              style={{ animationDelay: '750ms', animationFillMode: 'forwards' }}
             >
-              <p className="text-[10px] uppercase tracking-[0.15em] text-white/30 font-semibold mb-3">
-                Quick start
+              <p className="text-xs font-black uppercase tracking-[0.2em] mb-3">
+                ► QUICK START
               </p>
-              <div className="grid grid-cols-2 gap-2">
-                {TEMPLATES.map((t) => {
-                  const Icon = t.icon
-                  const active = activeTemplate === t.name
+              <div className="grid grid-cols-2 gap-3">
+                {TEMPLATES.map((name) => {
+                  const active = activeTemplate === name
                   return (
                     <button
-                      key={t.name}
-                      onClick={() => loadTemplate(t.name)}
-                      className={`flex items-center gap-2 p-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
+                      key={name}
+                      onClick={() => loadTemplate(name)}
+                      className={`brutal-btn px-3 py-3 text-xs text-left ${
                         active
-                          ? 'bg-violet-500/20 text-violet-300 border border-violet-500/40 shadow-lg shadow-violet-500/10'
-                          : 'bg-white/[0.03] text-white/50 border border-white/5 hover:bg-white/[0.06] hover:text-white/80 hover:border-white/10'
+                          ? 'bg-black text-[#ffe600]'
+                          : 'bg-white text-black hover:bg-[#ffe600]'
                       }`}
                     >
-                      <Icon className="w-4 h-4 shrink-0" />
-                      {t.name}
+                      {active ? '■ ' : '□ '}
+                      {name.toUpperCase()}
                     </button>
                   )
                 })}
@@ -374,127 +305,104 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Right: Editor panel */}
-          <div
-            ref={editorRef}
-            onMouseMove={handleMouseMove}
-            className="lg:col-span-3 relative opacity-0 animate-scale-in"
-            style={{ animationDelay: '800ms' }}
-          >
-            {/* Cursor spotlight */}
+          <footer className="relative z-10 p-6 border-t-4 border-black bg-black text-[#ffe600]">
+            <p className="text-xs font-black uppercase tracking-widest font-mono">
+              ● SYSTEM READY — JUST JSON
+            </p>
+          </footer>
+        </div>
+
+        {/* ── RIGHT: editor panel ── */}
+        <div className="relative w-full lg:w-[58%] bg-white flex flex-col">
+          <div className="absolute inset-0 brutal-checker pointer-events-none" />
+
+          <div className="relative z-10 flex flex-col flex-1 p-6 lg:p-8">
+            {/* Editor header */}
             <div
-              className="absolute pointer-events-none z-0 rounded-full transition-opacity duration-300"
-              style={{
-                left: mousePos.x - 150,
-                top: mousePos.y - 150,
-                width: 300,
-                height: 300,
-                background: 'radial-gradient(circle, rgba(124,58,237,0.15) 0%, transparent 70%)',
-                opacity: editorFocused ? 1 : 0.4,
-              }}
-            />
+              className="flex items-center justify-between mb-4 opacity-0 animate-brutal-slide"
+              style={{ animationDelay: '200ms', animationFillMode: 'forwards' }}
+            >
+              <span className="text-xs font-black uppercase tracking-[0.25em]">
+                {'>'} YOUR_CONFIG.JSON
+              </span>
+              {jsonInput.trim() && (
+                <span
+                  className={`brutal-tag font-mono ${
+                    isValidJson
+                      ? 'bg-[#00ff66] text-black'
+                      : 'bg-[#ff2d2d] text-white animate-brutal-shake'
+                  }`}
+                >
+                  {isValidJson ? 'VALID' : 'INVALID'}
+                </span>
+              )}
+            </div>
 
-            <div className="editor-border relative z-10">
-              <div className="rounded-[19px] bg-[#0c0c14]/90 overflow-hidden">
-                {/* Title bar */}
-                <div className="flex items-center justify-between px-5 py-3.5 border-b border-white/5 bg-white/[0.02]">
-                  <div className="flex items-center gap-3">
-                    <div className="flex gap-1.5">
-                      <div className="w-3 h-3 rounded-full bg-red-500/70" />
-                      <div className="w-3 h-3 rounded-full bg-amber-500/70" />
-                      <div className="w-3 h-3 rounded-full bg-emerald-500/70" />
+            {/* Editor */}
+            <div
+              className="brutal-box brutal-shadow-lg flex flex-col flex-1 min-h-[360px] opacity-0 animate-brutal-drop"
+              style={{ animationDelay: '350ms', animationFillMode: 'forwards' }}
+            >
+              {/* Title bar */}
+              <div className="flex items-center justify-between px-4 py-2.5 bg-black text-[#ffe600] border-b-4 border-black">
+                <div className="flex items-center gap-3">
+                  <div className="flex gap-1">
+                    <div className="w-4 h-4 bg-[#ff2d2d] border-2 border-[#ffe600]" />
+                    <div className="w-4 h-4 bg-[#ffe600] border-2 border-black" />
+                    <div className="w-4 h-4 bg-[#0040ff] border-2 border-black" />
+                  </div>
+                  <span className="font-mono text-xs font-bold">config.json</span>
+                </div>
+                <span className="font-mono text-xs font-bold">{lines.length} LN</span>
+              </div>
+
+              {/* Code area */}
+              <div className="flex flex-1 bg-black overflow-hidden">
+                <div className="py-4 pl-3 pr-2 border-r-4 border-[#ffe600] select-none shrink-0">
+                  {lines.map((_, i) => (
+                    <div
+                      key={i}
+                      className="font-mono text-xs leading-relaxed text-[#ffe600]/40 text-right w-7 font-bold"
+                    >
+                      {i + 1}
                     </div>
-                    <span className="text-xs text-white/30 font-mono ml-1">config.json</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <span className="text-[10px] text-white/20 font-mono">{lineCount} lines</span>
-                    {jsonInput.trim() && (
-                      <span
-                        className={`flex items-center gap-1.5 text-[11px] font-semibold px-2.5 py-1 rounded-full ${
-                          isValidJson
-                            ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/25'
-                            : 'bg-red-500/15 text-red-400 border border-red-500/25'
-                        }`}
-                      >
-                        {isValidJson ? <CheckCircle2 className="w-3 h-3" /> : <AlertCircle className="w-3 h-3" />}
-                        {isValidJson ? 'Valid' : 'Invalid'}
-                      </span>
-                    )}
-                  </div>
+                  ))}
                 </div>
-
-                {/* Editor body with line numbers */}
-                <div className="relative flex">
-                  <div className="py-5 pl-4 pr-2 select-none border-r border-white/5 bg-white/[0.01]">
-                    {jsonInput.split('\n').map((_, i) => (
-                      <div key={i} className="text-[11px] leading-relaxed text-white/15 font-mono text-right w-6">
-                        {i + 1}
-                      </div>
-                    ))}
-                  </div>
-
-                  <div className="relative flex-1">
-                    {editorFocused && (
-                      <div
-                        className="absolute left-0 right-0 h-px bg-gradient-to-r from-transparent via-violet-400/30 to-transparent pointer-events-none z-10"
-                        style={{ animation: 'scan-line 3s ease-in-out infinite' }}
-                      />
-                    )}
-                    <textarea
-                      value={jsonInput}
-                      onChange={(e) => setJsonInput(e.target.value)}
-                      onFocus={() => setEditorFocused(true)}
-                      onBlur={() => setEditorFocused(false)}
-                      spellCheck={false}
-                      className="w-full bg-transparent text-emerald-400/85 font-mono text-[13px] leading-relaxed py-5 px-4 resize-none focus:outline-none custom-scrollbar min-h-[380px]"
-                      placeholder="Paste your JSON config here..."
-                    />
-                  </div>
-                </div>
+                <textarea
+                  value={jsonInput}
+                  onChange={(e) => setJsonInput(e.target.value)}
+                  spellCheck={false}
+                  className="flex-1 bg-black text-[#00ff66] font-mono text-[13px] leading-relaxed py-4 px-4 resize-none focus:outline-none custom-scrollbar w-full min-h-[300px]"
+                  placeholder="// PASTE JSON HERE..."
+                />
               </div>
             </div>
 
+            {/* Error */}
             {error && (
-              <div className="mt-4 flex items-start gap-3 p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-300 text-sm animate-fade-in-up">
-                <AlertCircle className="w-4 h-4 mt-0.5 shrink-0" />
-                {error}
+              <div className="mt-4 brutal-box-red p-4 text-sm font-black uppercase tracking-wide animate-brutal-shake">
+                ⚠ {error}
               </div>
             )}
 
+            {/* CTA */}
             <button
               onClick={handleSubmit}
               disabled={loading || !isValidJson}
-              className="btn-glow group relative mt-5 w-full py-4 rounded-2xl font-bold text-base text-white transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed hover:scale-[1.02] active:scale-[0.98] animate-float-y"
-              style={{
-                background: 'linear-gradient(135deg, #7c3aed, #6366f1, #0891b2)',
-                boxShadow: '0 0 60px rgba(124,58,237,0.35), 0 8px 32px rgba(0,0,0,0.4)',
-              }}
+              className="brutal-btn w-full mt-5 py-5 text-lg bg-[#ff2d2d] text-white opacity-0 animate-brutal-drop"
+              style={{ animationDelay: '500ms', animationFillMode: 'forwards' }}
             >
-              <span className="relative z-10 flex items-center justify-center gap-2">
-                {loading ? (
-                  <>
-                    <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24" fill="none">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                    </svg>
-                    Generating...
-                  </>
-                ) : (
-                  <>
-                    <Code2 className="w-5 h-5" />
-                    Generate App
-                    <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
-                  </>
-                )}
-              </span>
+              {loading ? '▓▓▓ GENERATING... ▓▓▓' : '► GENERATE APP →'}
             </button>
 
-            <p className="text-center text-xs text-white/25 mt-4">
-              Supports missing fields, invalid values, and broken schemas
+            <p className="text-center text-[11px] font-black uppercase tracking-widest mt-4 opacity-60">
+              Broken schemas · Missing fields · Invalid values — WE HANDLE IT
             </p>
           </div>
         </div>
-      </main>
+      </div>
+
+      <BrutalMarquee />
     </div>
   )
 }

@@ -1,11 +1,17 @@
 @import "tailwindcss";
 
 :root {
-  --background: #050508;
-  --foreground: #f1f5f9;
-  --accent-purple: #a78bfa;
-  --accent-cyan: #22d3ee;
-  --accent-pink: #f472b6;
+  --brutal-black: #000000;
+  --brutal-white: #ffffff;
+  --brutal-yellow: #ffe600;
+  --brutal-red: #ff2d2d;
+  --brutal-blue: #0040ff;
+  --brutal-green: #00ff66;
+  --brutal-border: 4px;
+  --brutal-shadow: 6px 6px 0 var(--brutal-black);
+  --brutal-shadow-lg: 10px 10px 0 var(--brutal-black);
+  --background: var(--brutal-white);
+  --foreground: var(--brutal-black);
 }
 
 @theme inline {
@@ -20,179 +26,171 @@
 }
 
 html {
-  scroll-behavior: smooth;
+  scroll-behavior: auto;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  background: var(--brutal-white);
+  color: var(--brutal-black);
+  font-family: var(--font-geist-sans), "Arial Black", Impact, sans-serif;
   overflow-x: hidden;
 }
 
-/* ─── Keyframes ─── */
+/* ─── Brutalist primitives ─── */
 
-@keyframes fade-in-up {
-  from { opacity: 0; transform: translateY(28px); }
-  to { opacity: 1; transform: translateY(0); }
+.brutal-border {
+  border: var(--brutal-border) solid var(--brutal-black);
 }
 
-@keyframes fade-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
+.brutal-shadow {
+  box-shadow: var(--brutal-shadow);
 }
 
-@keyframes aurora-1 {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  33% { transform: translate(60px, -40px) scale(1.1); }
-  66% { transform: translate(-30px, 30px) scale(0.95); }
+.brutal-shadow-lg {
+  box-shadow: var(--brutal-shadow-lg);
 }
 
-@keyframes aurora-2 {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  50% { transform: translate(-50px, 50px) scale(1.15); }
+.brutal-box {
+  border: var(--brutal-border) solid var(--brutal-black);
+  box-shadow: var(--brutal-shadow);
+  background: var(--brutal-white);
 }
 
-@keyframes aurora-3 {
-  0%, 100% { transform: translate(0, 0) rotate(0deg); }
-  50% { transform: translate(40px, -60px) rotate(180deg); }
+.brutal-box-yellow {
+  border: var(--brutal-border) solid var(--brutal-black);
+  box-shadow: var(--brutal-shadow);
+  background: var(--brutal-yellow);
 }
 
-@keyframes gradient-shift {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
+.brutal-box-red {
+  border: var(--brutal-border) solid var(--brutal-black);
+  box-shadow: var(--brutal-shadow);
+  background: var(--brutal-red);
+  color: var(--brutal-white);
 }
 
-@keyframes shimmer {
-  0% { transform: translateX(-100%) skewX(-15deg); }
-  100% { transform: translateX(200%) skewX(-15deg); }
+.brutal-btn {
+  border: var(--brutal-border) solid var(--brutal-black);
+  box-shadow: var(--brutal-shadow-lg);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  transition: transform 0.08s ease, box-shadow 0.08s ease;
+  cursor: pointer;
 }
 
-@keyframes border-flow {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
+.brutal-btn:hover:not(:disabled) {
+  transform: translate(-2px, -2px);
+  box-shadow: 12px 12px 0 var(--brutal-black);
 }
 
-@keyframes pulse-ring {
-  0% { transform: scale(0.95); opacity: 0.7; }
-  50% { transform: scale(1.05); opacity: 1; }
-  100% { transform: scale(0.95); opacity: 0.7; }
+.brutal-btn:active:not(:disabled) {
+  transform: translate(4px, 4px);
+  box-shadow: 2px 2px 0 var(--brutal-black);
 }
 
-@keyframes float-y {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
+.brutal-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
 }
 
-@keyframes scan-line {
-  0% { top: 0; opacity: 0; }
-  10% { opacity: 0.5; }
-  90% { opacity: 0.5; }
-  100% { top: 100%; opacity: 0; }
+.brutal-tag {
+  border: 3px solid var(--brutal-black);
+  padding: 2px 10px;
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  display: inline-block;
 }
 
-@keyframes marquee {
+.brutal-checker {
+  background-color: var(--brutal-white);
+  background-image:
+    linear-gradient(45deg, #000 25%, transparent 25%),
+    linear-gradient(-45deg, #000 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #000 75%),
+    linear-gradient(-45deg, transparent 75%, #000 75%);
+  background-size: 16px 16px;
+  background-position: 0 0, 0 8px, 8px -8px, -8px 0;
+  opacity: 0.04;
+}
+
+/* ─── Animations ─── */
+
+@keyframes brutal-marquee {
   0% { transform: translateX(0); }
   100% { transform: translateX(-50%); }
 }
 
-@keyframes scale-in {
-  from { opacity: 0; transform: scale(0.94) translateY(12px); }
-  to { opacity: 1; transform: scale(1) translateY(0); }
+@keyframes brutal-blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
 }
 
-@keyframes glow-pulse {
-  0%, 100% { opacity: 0.5; filter: blur(60px); }
-  50% { opacity: 0.8; filter: blur(80px); }
+@keyframes brutal-slide-in {
+  from { opacity: 0; transform: translateX(-20px); }
+  to { opacity: 1; transform: translateX(0); }
 }
 
-/* ─── Utilities ─── */
-
-.animate-fade-in-up {
-  animation: fade-in-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+@keyframes brutal-drop-in {
+  from { opacity: 0; transform: translateY(-16px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-.animate-fade-in {
-  animation: fade-in 1s ease forwards;
+@keyframes brutal-shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
 }
 
-.animate-scale-in {
-  animation: scale-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+@keyframes brutal-flash {
+  0%, 100% { background-color: var(--brutal-yellow); }
+  50% { background-color: var(--brutal-red); color: white; }
 }
 
-.animate-aurora-1 { animation: aurora-1 12s ease-in-out infinite; }
-.animate-aurora-2 { animation: aurora-2 16s ease-in-out infinite; }
-.animate-aurora-3 { animation: aurora-3 20s ease-in-out infinite; }
-
-.animate-gradient-text {
-  background: linear-gradient(135deg, #c084fc, #22d3ee, #f472b6, #c084fc);
-  background-size: 300% 300%;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  animation: gradient-shift 4s ease infinite;
+.animate-brutal-marquee {
+  animation: brutal-marquee 18s linear infinite;
 }
 
-.animate-float-y {
-  animation: float-y 3s ease-in-out infinite;
+.animate-brutal-slide {
+  animation: brutal-slide-in 0.35s steps(4) forwards;
 }
 
-.glass-panel {
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+.animate-brutal-drop {
+  animation: brutal-drop-in 0.4s steps(5) forwards;
 }
 
-.glass-panel-strong {
-  backdrop-filter: blur(32px);
-  -webkit-backdrop-filter: blur(32px);
-  background: rgba(255, 255, 255, 0.07);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+.animate-brutal-blink {
+  animation: brutal-blink 1s step-end infinite;
 }
 
-.editor-border {
-  position: relative;
-  border-radius: 1.25rem;
-  padding: 1px;
-  background: linear-gradient(135deg, #7c3aed, #06b6d4, #ec4899, #7c3aed);
-  background-size: 300% 300%;
-  animation: border-flow 5s ease infinite;
+.animate-brutal-shake {
+  animation: brutal-shake 0.4s steps(3);
 }
 
-.editor-border::after {
-  content: "";
-  position: absolute;
-  inset: -2px;
-  border-radius: inherit;
-  background: inherit;
-  filter: blur(20px);
-  opacity: 0.4;
-  z-index: -1;
+.brutal-highlight {
+  background: var(--brutal-black);
+  color: var(--brutal-yellow);
+  padding: 0 6px;
+  display: inline;
 }
 
-.btn-glow {
-  position: relative;
-  overflow: hidden;
+.brutal-underline {
+  text-decoration: underline;
+  text-decoration-thickness: 4px;
+  text-underline-offset: 4px;
 }
 
-.btn-glow::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-  animation: shimmer 3s ease-in-out infinite;
+.custom-scrollbar::-webkit-scrollbar {
+  width: 12px;
+  background: var(--brutal-white);
+  border-left: 3px solid var(--brutal-black);
 }
 
-.marquee-track {
-  animation: marquee 25s linear infinite;
-}
-
-.custom-scrollbar::-webkit-scrollbar { width: 5px; }
-.custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(167, 139, 250, 0.4);
-  border-radius: 999px;
+  background: var(--brutal-black);
+  border: 2px solid var(--brutal-yellow);
 }
 
 @media (prefers-reduced-motion: reduce) {
