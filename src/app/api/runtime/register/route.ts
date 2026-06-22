@@ -23,7 +23,7 @@ async function saveNotification(
         take: count - 50,
         select: { id: true },
       })
-      await prisma.notification.deleteMany({ where: { id: { in: oldest.map((n) => n.id) } } })
+      await prisma.notification.deleteMany({ where: { id: { in: oldest.map((n: { id: string }) => n.id) } } })
     }
   } catch {
     // Non-critical — don't fail the main request

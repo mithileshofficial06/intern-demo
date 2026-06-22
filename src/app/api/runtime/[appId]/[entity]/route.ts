@@ -32,7 +32,7 @@ export async function GET(request: Request, { params }: RouteParams) {
     // 4. Return mapped records
     return NextResponse.json(
       {
-        records: records.map(record => ({
+        records: records.map((record: { id: string; data: any; createdAt: Date }) => ({
           id: record.id,
           data: record.data,
           createdAt: record.createdAt
