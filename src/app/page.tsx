@@ -16,6 +16,8 @@ import {
   Box,
   Users,
   FileText,
+  Terminal,
+  Rocket,
 } from 'lucide-react'
 
 const defaultJsonInput = `{
@@ -97,184 +99,78 @@ const TEMPLATE_DATA: Record<string, string> = {
 }`,
 }
 
-const PARTICLES = [
-  { w: 6, h: 6, left: '12%', top: '18%', delay: '0s', dur: '18s' },
-  { w: 4, h: 4, left: '78%', top: '25%', delay: '2s', dur: '22s' },
-  { w: 8, h: 8, left: '55%', top: '65%', delay: '1s', dur: '16s' },
-  { w: 5, h: 5, left: '88%', top: '72%', delay: '3s', dur: '20s' },
-  { w: 3, h: 3, left: '30%', top: '80%', delay: '4s', dur: '24s' },
-  { w: 7, h: 7, left: '65%', top: '12%', delay: '1.5s', dur: '19s' },
-]
-
 const FEATURES = [
-  { icon: Zap, title: 'Dynamic form generation', delay: 900 },
-  { icon: RefreshCw, title: 'Automatic CRUD APIs', delay: 1000 },
-  { icon: Shield, title: 'Graceful error handling', delay: 1100 },
+  { icon: Zap, title: 'Dynamic forms', desc: 'Auto-generated from schema' },
+  { icon: RefreshCw, title: 'CRUD APIs', desc: 'REST endpoints included' },
+  { icon: Shield, title: 'Error handling', desc: 'Graceful fallbacks built-in' },
 ]
 
 const TEMPLATES = [
-  { name: 'Task Manager', icon: CheckCircle2, color: 'from-violet-500/20 to-purple-600/10' },
-  { name: 'Inventory', icon: Box, color: 'from-cyan-500/20 to-blue-600/10' },
-  { name: 'Blog CMS', icon: FileText, color: 'from-pink-500/20 to-rose-600/10' },
-  { name: 'CRM', icon: Users, color: 'from-emerald-500/20 to-teal-600/10' },
+  { name: 'Task Manager', icon: CheckCircle2 },
+  { name: 'Inventory', icon: Box },
+  { name: 'Blog CMS', icon: FileText },
+  { name: 'CRM', icon: Users },
 ]
 
-function AnimatedCounter({
-  target,
-  suffix = '',
-  prefix = '',
-  duration = 1200,
-}: {
-  target: number
-  suffix?: string
-  prefix?: string
-  duration?: number
-}) {
-  const [value, setValue] = useState(0)
-  const started = useRef(false)
+const MARQUEE_ITEMS = [
+  'Zero boilerplate',
+  'Instant deploy',
+  'Schema-driven',
+  'Type-safe',
+  'Auto CRUD',
+  'Live preview',
+  'No backend code',
+  'JSON only',
+]
 
-  useEffect(() => {
-    if (started.current) return
-    started.current = true
-
-    const start = performance.now()
-    const tick = (now: number) => {
-      const progress = Math.min((now - start) / duration, 1)
-      const eased = 1 - Math.pow(1 - progress, 3)
-      setValue(Math.round(target * eased * 10) / 10)
-      if (progress < 1) requestAnimationFrame(tick)
-    }
-    const id = requestAnimationFrame(tick)
-    return () => cancelAnimationFrame(id)
-  }, [target, duration])
-
+function AuroraBackground() {
   return (
-    <span>
-      {prefix}
-      {Number.isInteger(target) ? Math.round(value) : value.toFixed(1)}
-      {suffix}
-    </span>
-  )
-}
-
-function AmbientOrbs() {
-  return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+    <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
+      <div className="absolute inset-0 bg-[#050508]" />
       <div
-        className="absolute -top-32 -left-32 w-96 h-96 rounded-full opacity-30 blur-3xl animate-float"
-        style={{ background: 'radial-gradient(circle, #8b5cf6 0%, transparent 70%)' }}
+        className="absolute top-[-20%] left-[-10%] w-[60vw] h-[60vw] rounded-full animate-aurora-1"
+        style={{
+          background: 'radial-gradient(circle, rgba(124,58,237,0.35) 0%, transparent 70%)',
+          animation: 'aurora-1 12s ease-in-out infinite, glow-pulse 8s ease-in-out infinite',
+        }}
       />
       <div
-        className="absolute top-1/2 -right-24 w-80 h-80 rounded-full opacity-20 blur-3xl animate-float-slow"
-        style={{ background: 'radial-gradient(circle, #06b6d4 0%, transparent 70%)', animationDelay: '2s' }}
+        className="absolute top-[30%] right-[-15%] w-[50vw] h-[50vw] rounded-full animate-aurora-2"
+        style={{
+          background: 'radial-gradient(circle, rgba(6,182,212,0.25) 0%, transparent 70%)',
+        }}
       />
       <div
-        className="absolute -bottom-20 left-1/3 w-72 h-72 rounded-full opacity-25 blur-3xl animate-float"
-        style={{ background: 'radial-gradient(circle, #ec4899 0%, transparent 70%)', animationDelay: '4s' }}
+        className="absolute bottom-[-10%] left-[20%] w-[45vw] h-[45vw] rounded-full animate-aurora-3"
+        style={{
+          background: 'radial-gradient(circle, rgba(236,72,153,0.2) 0%, transparent 70%)',
+        }}
       />
-      {PARTICLES.map((p, i) => (
-        <div
-          key={i}
-          className="absolute rounded-full bg-violet-400/30 animate-float"
-          style={{
-            width: p.w,
-            height: p.h,
-            left: p.left,
-            top: p.top,
-            animationDelay: p.delay,
-            animationDuration: p.dur,
-          }}
-        />
-      ))}
+      <div
+        className="absolute inset-0 opacity-[0.04]"
+        style={{
+          backgroundImage: 'radial-gradient(circle at 1px 1px, white 1px, transparent 0)',
+          backgroundSize: '40px 40px',
+        }}
+      />
     </div>
   )
 }
 
-function FeatureItem({
-  icon: Icon,
-  title,
-  delay,
-}: {
-  icon: typeof Zap
-  title: string
-  delay: number
-}) {
+function MarqueeStrip() {
+  const items = [...MARQUEE_ITEMS, ...MARQUEE_ITEMS]
   return (
-    <div
-      className="group flex items-center gap-3.5 opacity-0 animate-fade-in-up cursor-default"
-      style={{ animationDelay: `${delay}ms` }}
-    >
-      <div className="relative flex items-center justify-center w-9 h-9 rounded-xl bg-gradient-to-br from-violet-100 to-purple-50 border border-violet-200/60 shadow-sm transition-all duration-300 group-hover:scale-110 group-hover:shadow-md group-hover:shadow-violet-200/50 group-hover:border-violet-300">
-        <Icon className="w-4 h-4 text-violet-600 transition-transform duration-300 group-hover:rotate-12" />
+    <div className="relative overflow-hidden border-y border-white/5 py-3 mb-12 opacity-0 animate-fade-in" style={{ animationDelay: '600ms' }}>
+      <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-[#050508] to-transparent z-10" />
+      <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-[#050508] to-transparent z-10" />
+      <div className="flex marquee-track w-max gap-8">
+        {items.map((item, i) => (
+          <span key={i} className="flex items-center gap-2 text-xs font-medium uppercase tracking-[0.2em] text-white/30 whitespace-nowrap">
+            <Sparkles className="w-3 h-3 text-violet-400/60" />
+            {item}
+          </span>
+        ))}
       </div>
-      <span className="text-slate-600 text-[15px] font-medium transition-colors duration-300 group-hover:text-slate-900">
-        {title}
-      </span>
-    </div>
-  )
-}
-
-function StatsRow() {
-  return (
-    <div
-      className="grid grid-cols-3 gap-4 mt-10 opacity-0 animate-fade-in-up"
-      style={{ animationDelay: '1200ms' }}
-    >
-      {[
-        { label: 'Lines of Code', display: <AnimatedCounter target={0} /> },
-        {
-          label: 'Build Time',
-          display: (
-            <>
-              {'< '}
-              <AnimatedCounter target={1} />
-              sec
-            </>
-          ),
-        },
-        {
-          label: 'Uptime',
-          display: (
-            <>
-              <AnimatedCounter target={99.9} />
-              %
-            </>
-          ),
-        },
-      ].map((stat) => (
-        <div
-          key={stat.label}
-          className="group relative text-center p-4 rounded-2xl bg-white/50 border border-slate-200/60 backdrop-blur-sm transition-all duration-300 hover:bg-white/80 hover:border-violet-200 hover:shadow-lg hover:shadow-violet-100/50 hover:-translate-y-0.5"
-        >
-          <div className="text-2xl font-bold bg-gradient-to-r from-violet-600 to-cyan-500 bg-clip-text text-transparent">
-            {stat.display}
-          </div>
-          <div className="text-[11px] text-slate-400 mt-1 font-medium uppercase tracking-wider">
-            {stat.label}
-          </div>
-        </div>
-      ))}
-    </div>
-  )
-}
-
-function ValidationBadge({ isValid, hasContent }: { isValid: boolean; hasContent: boolean }) {
-  if (!hasContent) return null
-
-  return (
-    <div
-      className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold transition-all duration-500 ${
-        isValid
-          ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 shadow-[0_0_20px_rgba(16,185,129,0.15)]'
-          : 'bg-red-500/15 text-red-400 border border-red-500/30 shadow-[0_0_20px_rgba(239,68,68,0.15)]'
-      }`}
-    >
-      {isValid ? (
-        <CheckCircle2 className="w-3.5 h-3.5" />
-      ) : (
-        <AlertCircle className="w-3.5 h-3.5" />
-      )}
-      {isValid ? 'Valid JSON' : 'Invalid JSON'}
     </div>
   )
 }
@@ -287,7 +183,7 @@ export default function Home() {
   const [activeTemplate, setActiveTemplate] = useState('Task Manager')
   const [editorFocused, setEditorFocused] = useState(false)
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
-  const rightPanelRef = useRef<HTMLDivElement>(null)
+  const editorRef = useRef<HTMLDivElement>(null)
   const router = useRouter()
 
   useEffect(() => {
@@ -302,8 +198,8 @@ export default function Home() {
   }, [jsonInput])
 
   const handleMouseMove = useCallback((e: React.MouseEvent) => {
-    if (!rightPanelRef.current) return
-    const rect = rightPanelRef.current.getBoundingClientRect()
+    if (!editorRef.current) return
+    const rect = editorRef.current.getBoundingClientRect()
     setMousePos({ x: e.clientX - rect.left, y: e.clientY - rect.top })
   }, [])
 
@@ -316,7 +212,6 @@ export default function Home() {
   const handleSubmit = async () => {
     setLoading(true)
     setError(null)
-
     try {
       let parsedJson
       try {
@@ -325,24 +220,20 @@ export default function Home() {
         setError('Invalid JSON: please check your syntax')
         return
       }
-
       const validationResult = safeValidateConfig(parsedJson)
       if (!validationResult.success) {
         setError(validationResult.error)
         return
       }
-
       const response = await fetch('/api/runtime/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(parsedJson),
       })
-
       if (!response.ok) {
         setError('Failed to register app')
         return
       }
-
       const { appId } = await response.json()
       router.push(`/${appId}`)
     } catch (err) {
@@ -353,313 +244,257 @@ export default function Home() {
     }
   }
 
+  const lineCount = jsonInput.split('\n').length
+
   return (
-    <div className="min-h-screen flex flex-col lg:flex-row relative overflow-hidden">
-      {/* ── Left Panel ── */}
-      <div className="relative w-full lg:w-[44%] xl:w-[42%] min-h-[50vh] lg:min-h-screen flex flex-col">
-        <AmbientOrbs />
+    <div className="relative min-h-screen text-white">
+      <AuroraBackground />
 
-        <div className="absolute inset-0 bg-gradient-to-br from-violet-50/80 via-white to-cyan-50/60" />
-        <div
-          className="absolute inset-0 opacity-[0.03]"
-          style={{
-            backgroundImage: `radial-gradient(circle at 1px 1px, #8b5cf6 1px, transparent 0)`,
-            backgroundSize: '32px 32px',
-          }}
-        />
-
-        {/* Logo */}
-        <header
-          className="relative z-10 flex items-center justify-between px-8 lg:px-12 pt-8 opacity-0 animate-fade-in-left"
-          style={{ animationDelay: '100ms' }}
-        >
-          <div className="flex items-center gap-3">
-            <div className="relative flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-violet-600 to-cyan-500 shadow-lg shadow-violet-300/40">
-              <Layers className="w-5 h-5 text-white" />
-              <div className="absolute inset-0 rounded-xl bg-white/20 animate-pulse" />
-            </div>
-            <div>
-              <span className="text-slate-900 font-bold text-xl tracking-tight">AppForge</span>
-              <span className="ml-2.5 px-2 py-0.5 bg-violet-100 text-violet-700 text-[10px] rounded-full font-bold uppercase tracking-wider border border-violet-200">
-                Beta
-              </span>
-            </div>
+      {/* Nav */}
+      <nav
+        className="relative z-20 flex items-center justify-between max-w-6xl mx-auto px-6 pt-6 opacity-0 animate-fade-in-up"
+        style={{ animationDelay: '100ms' }}
+      >
+        <div className="flex items-center gap-3">
+          <div className="flex items-center justify-center w-9 h-9 rounded-xl bg-gradient-to-br from-violet-500 to-cyan-400 shadow-lg shadow-violet-500/30">
+            <Layers className="w-4.5 h-4.5 text-white" />
           </div>
-        </header>
+          <span className="font-bold text-lg tracking-tight">AppForge</span>
+          <span className="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-full bg-violet-500/20 text-violet-300 border border-violet-500/30">
+            Beta
+          </span>
+        </div>
+        <div className="hidden sm:flex items-center gap-2 text-xs text-white/40">
+          <Terminal className="w-3.5 h-3.5" />
+          JSON → Live App
+        </div>
+      </nav>
 
-        {/* Hero content */}
-        <div className="relative z-10 flex-1 flex flex-col justify-center px-8 lg:px-12 py-10 lg:py-0">
+      <main className="relative z-10 max-w-6xl mx-auto px-6 pb-16">
+        {/* Hero */}
+        <section className="text-center pt-14 pb-6">
           <div
-            className="inline-flex items-center gap-2 w-fit px-3 py-1.5 rounded-full bg-violet-100/80 border border-violet-200/60 text-violet-700 text-[11px] font-bold uppercase tracking-[0.2em] mb-6 opacity-0 animate-fade-in-up"
-            style={{ animationDelay: '250ms' }}
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-panel text-violet-300 text-xs font-semibold mb-8 opacity-0 animate-fade-in-up"
+            style={{ animationDelay: '200ms' }}
           >
-            <Sparkles className="w-3 h-3" />
-            JSON → Live App
+            <Rocket className="w-3.5 h-3.5" />
+            No code required — just JSON
           </div>
 
           <h1
-            className="text-4xl sm:text-5xl xl:text-[3.25rem] font-black leading-[1.08] text-slate-900 tracking-tight opacity-0 animate-fade-in-up"
-            style={{ animationDelay: '400ms' }}
+            className="text-5xl sm:text-6xl lg:text-7xl font-black tracking-tight leading-[1.05] opacity-0 animate-fade-in-up"
+            style={{ animationDelay: '350ms' }}
           >
-            Build apps from{' '}
+            Build apps from
+            <br />
             <span className="animate-gradient-text">config.</span>
           </h1>
 
           <p
-            className="text-slate-500 text-lg mt-5 max-w-md leading-relaxed opacity-0 animate-fade-in-up"
-            style={{ animationDelay: '550ms' }}
-          >
-            Paste a JSON schema. Get a fully working app with forms, tables, and
-            APIs — instantly.
-          </p>
-
-          <div className="mt-9 space-y-3.5">
-            {FEATURES.map((f) => (
-              <FeatureItem key={f.title} {...f} />
-            ))}
-          </div>
-
-          <StatsRow />
-
-          {/* Templates */}
-          <div
-            className="mt-10 opacity-0 animate-fade-in-up"
-            style={{ animationDelay: '1350ms' }}
-          >
-            <p className="text-slate-400 text-[11px] uppercase tracking-[0.15em] font-semibold mb-3.5">
-              Quick Start Templates
-            </p>
-            <div className="grid grid-cols-2 gap-2.5">
-              {TEMPLATES.map((template, i) => {
-                const Icon = template.icon
-                const isActive = activeTemplate === template.name
-                return (
-                  <button
-                    key={template.name}
-                    onClick={() => loadTemplate(template.name)}
-                    className={`group relative flex items-center gap-2.5 p-3.5 text-left text-sm rounded-xl border transition-all duration-300 overflow-hidden ${
-                      isActive
-                        ? 'bg-violet-50 border-violet-300 text-violet-700 shadow-md shadow-violet-100'
-                        : 'bg-white/60 border-slate-200/80 text-slate-600 hover:border-violet-200 hover:bg-white hover:shadow-md hover:shadow-violet-50 hover:-translate-y-0.5'
-                    }`}
-                    style={{ animationDelay: `${1400 + i * 80}ms` }}
-                  >
-                    <div
-                      className={`absolute inset-0 bg-gradient-to-br ${template.color} opacity-0 group-hover:opacity-100 transition-opacity duration-300`}
-                    />
-                    <div
-                      className={`relative flex items-center justify-center w-8 h-8 rounded-lg transition-all duration-300 ${
-                        isActive
-                          ? 'bg-violet-200/60'
-                          : 'bg-slate-100 group-hover:bg-violet-100'
-                      }`}
-                    >
-                      <Icon
-                        className={`w-4 h-4 transition-transform duration-300 group-hover:scale-110 ${
-                          isActive ? 'text-violet-600' : 'text-slate-500 group-hover:text-violet-600'
-                        }`}
-                      />
-                    </div>
-                    <span className="relative font-medium">{template.name}</span>
-                  </button>
-                )
-              })}
-            </div>
-          </div>
-        </div>
-
-        <footer
-          className="relative z-10 px-8 lg:px-12 pb-8 opacity-0 animate-fade-in-up"
-          style={{ animationDelay: '1600ms' }}
-        >
-          <p className="text-slate-400 text-sm flex items-center gap-2.5">
-            <span className="relative flex h-2.5 w-2.5">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500" />
-            </span>
-            No code required. Just JSON.
-          </p>
-        </footer>
-      </div>
-
-      {/* ── Right Panel ── */}
-      <div
-        ref={rightPanelRef}
-        onMouseMove={handleMouseMove}
-        className="relative w-full lg:w-[56%] xl:w-[58%] min-h-[50vh] lg:min-h-screen bg-[#030712] flex flex-col"
-      >
-        {/* Cursor glow */}
-        <div
-          className="absolute pointer-events-none transition-opacity duration-500 z-0"
-          style={{
-            left: mousePos.x - 200,
-            top: mousePos.y - 200,
-            width: 400,
-            height: 400,
-            background: 'radial-gradient(circle, rgba(139,92,246,0.12) 0%, transparent 70%)',
-            opacity: editorFocused ? 1 : 0.5,
-          }}
-        />
-
-        {/* Grid background */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div
-            className="absolute inset-[-20px] opacity-[0.07]"
-            style={{
-              backgroundImage: `
-                linear-gradient(rgba(139, 92, 246, 0.5) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(139, 92, 246, 0.5) 1px, transparent 1px)
-              `,
-              backgroundSize: '24px 24px',
-              animation: 'grid-drift 20s linear infinite',
-            }}
-          />
-          <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-violet-500/40 to-transparent" />
-        </div>
-
-        <div className="relative z-10 flex flex-col justify-center flex-1 px-6 sm:px-10 lg:px-12 py-10 lg:py-12">
-          <div
-            className="flex items-center justify-between mb-4 opacity-0 animate-fade-in-right"
-            style={{ animationDelay: '300ms' }}
-          >
-            <label className="flex items-center gap-2 text-slate-400 text-[11px] uppercase tracking-[0.2em] font-semibold">
-              <Code2 className="w-3.5 h-3.5 text-violet-400" />
-              Your Configuration
-            </label>
-            <ValidationBadge isValid={isValidJson} hasContent={jsonInput.trim().length > 0} />
-          </div>
-
-          {/* Editor window */}
-          <div
-            className="opacity-0 animate-scale-in"
+            className="mt-6 text-lg text-white/50 max-w-xl mx-auto leading-relaxed opacity-0 animate-fade-in-up"
             style={{ animationDelay: '500ms' }}
           >
-            <div className="editor-glow-border">
-              <div className="rounded-[15px] bg-[#0a0f1e] overflow-hidden shadow-2xl shadow-black/50">
-                {/* Window chrome */}
-                <div className="flex items-center gap-2 px-4 py-3 bg-[#0d1225] border-b border-slate-800/80">
-                  <div className="flex gap-1.5">
-                    <div className="w-3 h-3 rounded-full bg-red-500/80 hover:bg-red-400 transition-colors" />
-                    <div className="w-3 h-3 rounded-full bg-amber-500/80 hover:bg-amber-400 transition-colors" />
-                    <div className="w-3 h-3 rounded-full bg-emerald-500/80 hover:bg-emerald-400 transition-colors" />
+            Paste a JSON schema. Get a fully working app with forms, tables, and APIs — instantly.
+          </p>
+        </section>
+
+        <MarqueeStrip />
+
+        {/* Bento grid: features + editor */}
+        <div className="grid lg:grid-cols-5 gap-5">
+          {/* Left bento column */}
+          <div className="lg:col-span-2 flex flex-col gap-5">
+            {/* Feature cards */}
+            {FEATURES.map((f, i) => {
+              const Icon = f.icon
+              return (
+                <div
+                  key={f.title}
+                  className="glass-panel rounded-2xl p-5 flex items-start gap-4 transition-all duration-300 hover:bg-white/[0.07] hover:border-white/15 hover:-translate-y-0.5 opacity-0 animate-fade-in-up group"
+                  style={{ animationDelay: `${700 + i * 100}ms` }}
+                >
+                  <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500/20 to-cyan-500/10 border border-violet-500/20 shrink-0 transition-transform duration-300 group-hover:scale-110">
+                    <Icon className="w-5 h-5 text-violet-400" />
                   </div>
-                  <span className="ml-3 text-[11px] text-slate-500 font-mono">config.json</span>
-                  <div className="ml-auto flex items-center gap-1.5 text-[10px] text-slate-600">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                    live
+                  <div>
+                    <h3 className="font-semibold text-white/90">{f.title}</h3>
+                    <p className="text-sm text-white/40 mt-0.5">{f.desc}</p>
                   </div>
                 </div>
+              )
+            })}
 
-                <div className="relative">
-                  {/* Scan line effect on focus */}
-                  {editorFocused && (
-                    <div
-                      className="absolute left-0 right-0 h-px bg-gradient-to-r from-transparent via-violet-400/40 to-transparent pointer-events-none z-10"
-                      style={{ animation: 'scan-line 4s ease-in-out infinite' }}
-                    />
-                  )}
-
-                  <textarea
-                    value={jsonInput}
-                    onChange={(e) => setJsonInput(e.target.value)}
-                    onFocus={() => setEditorFocused(true)}
-                    onBlur={() => setEditorFocused(false)}
-                    rows={16}
-                    spellCheck={false}
-                    className="w-full bg-transparent text-emerald-400/90 font-mono text-[13px] leading-relaxed p-5 resize-none focus:outline-none custom-scrollbar transition-all duration-300"
-                    placeholder="Paste your JSON config here..."
-                    style={{
-                      textShadow: editorFocused
-                        ? '0 0 20px rgba(74, 222, 128, 0.15)'
-                        : 'none',
-                      minHeight: '320px',
-                    }}
-                  />
+            {/* Stats row */}
+            <div
+              className="glass-panel rounded-2xl p-5 grid grid-cols-3 gap-3 opacity-0 animate-fade-in-up"
+              style={{ animationDelay: '1000ms' }}
+            >
+              {[
+                { val: '0', label: 'Lines of code' },
+                { val: '<1s', label: 'Build time' },
+                { val: '99.9%', label: 'Uptime' },
+              ].map((s) => (
+                <div key={s.label} className="text-center">
+                  <div className="text-xl font-bold bg-gradient-to-r from-violet-400 to-cyan-400 bg-clip-text text-transparent">
+                    {s.val}
+                  </div>
+                  <div className="text-[10px] text-white/30 mt-1 uppercase tracking-wider">{s.label}</div>
                 </div>
+              ))}
+            </div>
+
+            {/* Templates */}
+            <div
+              className="glass-panel rounded-2xl p-5 opacity-0 animate-fade-in-up"
+              style={{ animationDelay: '1100ms' }}
+            >
+              <p className="text-[10px] uppercase tracking-[0.15em] text-white/30 font-semibold mb-3">
+                Quick start
+              </p>
+              <div className="grid grid-cols-2 gap-2">
+                {TEMPLATES.map((t) => {
+                  const Icon = t.icon
+                  const active = activeTemplate === t.name
+                  return (
+                    <button
+                      key={t.name}
+                      onClick={() => loadTemplate(t.name)}
+                      className={`flex items-center gap-2 p-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
+                        active
+                          ? 'bg-violet-500/20 text-violet-300 border border-violet-500/40 shadow-lg shadow-violet-500/10'
+                          : 'bg-white/[0.03] text-white/50 border border-white/5 hover:bg-white/[0.06] hover:text-white/80 hover:border-white/10'
+                      }`}
+                    >
+                      <Icon className="w-4 h-4 shrink-0" />
+                      {t.name}
+                    </button>
+                  )
+                })}
               </div>
             </div>
           </div>
 
-          {/* Error */}
-          {error && (
-            <div className="mt-4 flex items-start gap-3 p-4 rounded-xl bg-red-950/60 border border-red-800/50 text-red-300 text-sm animate-fade-in-up glass-dark">
-              <AlertCircle className="w-4 h-4 mt-0.5 shrink-0 text-red-400" />
-              <span>{error}</span>
-            </div>
-          )}
-
-          {/* CTA */}
-          <button
-            onClick={handleSubmit}
-            disabled={loading || !isValidJson}
-            className="group relative mt-5 w-full py-4 rounded-xl font-semibold text-base tracking-wide text-white overflow-hidden transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed hover:scale-[1.015] active:scale-[0.99] opacity-0 animate-fade-in-up animate-shimmer"
-            style={{
-              animationDelay: '700ms',
-              background: 'linear-gradient(135deg, #7c3aed 0%, #6366f1 50%, #0891b2 100%)',
-              boxShadow: loading
-                ? '0 0 40px rgba(139, 92, 246, 0.5), 0 8px 32px rgba(0,0,0,0.3)'
-                : '0 8px 32px rgba(124, 58, 237, 0.35), 0 2px 8px rgba(0,0,0,0.2)',
-            }}
+          {/* Right: Editor panel */}
+          <div
+            ref={editorRef}
+            onMouseMove={handleMouseMove}
+            className="lg:col-span-3 relative opacity-0 animate-scale-in"
+            style={{ animationDelay: '800ms' }}
           >
-            <span className="relative z-10 flex items-center justify-center gap-2.5">
-              {loading ? (
-                <>
-                  <svg
-                    className="animate-spin h-5 w-5"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                  >
-                    <circle
-                      className="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                    />
-                    <path
-                      className="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-                    />
-                  </svg>
-                  Generating your app...
-                </>
-              ) : (
-                <>
-                  Generate App
-                  <ArrowRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
-                </>
-              )}
-            </span>
-          </button>
+            {/* Cursor spotlight */}
+            <div
+              className="absolute pointer-events-none z-0 rounded-full transition-opacity duration-300"
+              style={{
+                left: mousePos.x - 150,
+                top: mousePos.y - 150,
+                width: 300,
+                height: 300,
+                background: 'radial-gradient(circle, rgba(124,58,237,0.15) 0%, transparent 70%)',
+                opacity: editorFocused ? 1 : 0.4,
+              }}
+            />
 
-          <p
-            className="text-slate-600 text-xs text-center mt-4 opacity-0 animate-fade-in-up"
-            style={{ animationDelay: '900ms' }}
-          >
-            Supports missing fields, invalid values, and broken schemas
-          </p>
-
-          {loading && (
-            <div className="mt-5 flex justify-center gap-3 opacity-0 animate-fade-in-up">
-              {['Parsing schema', 'Building APIs', 'Launching app'].map((step, i) => (
-                <div
-                  key={step}
-                  className="flex items-center gap-1.5 text-[11px] text-slate-500"
-                  style={{ animationDelay: `${i * 0.3}s` }}
-                >
-                  <div
-                    className="w-1.5 h-1.5 rounded-full bg-violet-500"
-                    style={{ animation: `bounce-subtle 1s ease-in-out ${i * 0.2}s infinite` }}
-                  />
-                  {step}
+            <div className="editor-border relative z-10">
+              <div className="rounded-[19px] bg-[#0c0c14]/90 overflow-hidden">
+                {/* Title bar */}
+                <div className="flex items-center justify-between px-5 py-3.5 border-b border-white/5 bg-white/[0.02]">
+                  <div className="flex items-center gap-3">
+                    <div className="flex gap-1.5">
+                      <div className="w-3 h-3 rounded-full bg-red-500/70" />
+                      <div className="w-3 h-3 rounded-full bg-amber-500/70" />
+                      <div className="w-3 h-3 rounded-full bg-emerald-500/70" />
+                    </div>
+                    <span className="text-xs text-white/30 font-mono ml-1">config.json</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <span className="text-[10px] text-white/20 font-mono">{lineCount} lines</span>
+                    {jsonInput.trim() && (
+                      <span
+                        className={`flex items-center gap-1.5 text-[11px] font-semibold px-2.5 py-1 rounded-full ${
+                          isValidJson
+                            ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/25'
+                            : 'bg-red-500/15 text-red-400 border border-red-500/25'
+                        }`}
+                      >
+                        {isValidJson ? <CheckCircle2 className="w-3 h-3" /> : <AlertCircle className="w-3 h-3" />}
+                        {isValidJson ? 'Valid' : 'Invalid'}
+                      </span>
+                    )}
+                  </div>
                 </div>
-              ))}
+
+                {/* Editor body with line numbers */}
+                <div className="relative flex">
+                  <div className="py-5 pl-4 pr-2 select-none border-r border-white/5 bg-white/[0.01]">
+                    {jsonInput.split('\n').map((_, i) => (
+                      <div key={i} className="text-[11px] leading-relaxed text-white/15 font-mono text-right w-6">
+                        {i + 1}
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="relative flex-1">
+                    {editorFocused && (
+                      <div
+                        className="absolute left-0 right-0 h-px bg-gradient-to-r from-transparent via-violet-400/30 to-transparent pointer-events-none z-10"
+                        style={{ animation: 'scan-line 3s ease-in-out infinite' }}
+                      />
+                    )}
+                    <textarea
+                      value={jsonInput}
+                      onChange={(e) => setJsonInput(e.target.value)}
+                      onFocus={() => setEditorFocused(true)}
+                      onBlur={() => setEditorFocused(false)}
+                      spellCheck={false}
+                      className="w-full bg-transparent text-emerald-400/85 font-mono text-[13px] leading-relaxed py-5 px-4 resize-none focus:outline-none custom-scrollbar min-h-[380px]"
+                      placeholder="Paste your JSON config here..."
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
-          )}
+
+            {error && (
+              <div className="mt-4 flex items-start gap-3 p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-300 text-sm animate-fade-in-up">
+                <AlertCircle className="w-4 h-4 mt-0.5 shrink-0" />
+                {error}
+              </div>
+            )}
+
+            <button
+              onClick={handleSubmit}
+              disabled={loading || !isValidJson}
+              className="btn-glow group relative mt-5 w-full py-4 rounded-2xl font-bold text-base text-white transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed hover:scale-[1.02] active:scale-[0.98] animate-float-y"
+              style={{
+                background: 'linear-gradient(135deg, #7c3aed, #6366f1, #0891b2)',
+                boxShadow: '0 0 60px rgba(124,58,237,0.35), 0 8px 32px rgba(0,0,0,0.4)',
+              }}
+            >
+              <span className="relative z-10 flex items-center justify-center gap-2">
+                {loading ? (
+                  <>
+                    <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24" fill="none">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                    </svg>
+                    Generating...
+                  </>
+                ) : (
+                  <>
+                    <Code2 className="w-5 h-5" />
+                    Generate App
+                    <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
+                  </>
+                )}
+              </span>
+            </button>
+
+            <p className="text-center text-xs text-white/25 mt-4">
+              Supports missing fields, invalid values, and broken schemas
+            </p>
+          </div>
         </div>
-      </div>
+      </main>
     </div>
   )
 }
