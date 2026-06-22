@@ -24,18 +24,16 @@ export default function TableRenderer({ entity, appId, onAddNew }: TableRenderer
   const fetchRecords = async () => {
     setLoading(true)
     setError(null)
-
     try {
       const response = await fetch(`/api/runtime/${appId}/${entity.name}`)
-
       if (response.ok) {
         const data = await response.json()
         setRecords(data.records)
       } else {
-        setError('Failed to load records')
+        setError('FAILED TO LOAD RECORDS')
       }
     } catch (err) {
-      setError('Failed to load records')
+      setError('FAILED TO LOAD RECORDS')
       console.error('Error fetching records:', err)
     } finally {
       setLoading(false)
@@ -49,16 +47,15 @@ export default function TableRenderer({ entity, appId, onAddNew }: TableRenderer
   const handleDelete = async (id: string) => {
     try {
       const response = await fetch(`/api/runtime/${appId}/${entity.name}?id=${id}`, {
-        method: 'DELETE'
+        method: 'DELETE',
       })
-
       if (response.ok) {
-        await fetchRecords() // Refresh the list
+        await fetchRecords()
       } else {
-        setError('Failed to delete record')
+        setError('FAILED TO DELETE RECORD')
       }
     } catch (err) {
-      setError('Failed to delete record')
+      setError('FAILED TO DELETE RECORD')
       console.error('Error deleting record:', err)
     }
   }
@@ -70,7 +67,7 @@ export default function TableRenderer({ entity, appId, onAddNew }: TableRenderer
         month: 'short',
         day: 'numeric',
         hour: '2-digit',
-        minute: '2-digit'
+        minute: '2-digit',
       })
     } catch {
       return dateString
@@ -79,83 +76,88 @@ export default function TableRenderer({ entity, appId, onAddNew }: TableRenderer
 
   return (
     <ErrorBoundary>
-      <div className="bg-white rounded-lg shadow-md p-6">
-        {/* Header */}
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold">{entity.name} Records</h2>
+      <div className="brutal-box brutal-shadow-lg p-6 bg-white">
+        <div className="flex flex-wrap justify-between items-center gap-4 mb-6 pb-4 border-b-4 border-black">
+          <h2 className="text-xl font-black uppercase tracking-tight">
+            {entity.name} RECORDS
+          </h2>
           {onAddNew && (
             <button
               onClick={onAddNew}
-              className="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded transition-colors"
+              className="brutal-btn px-4 py-2.5 text-xs bg-[#ff2d2d] text-white"
             >
-              Add New
+              + ADD NEW
             </button>
           )}
         </div>
 
-        {/* Loading State */}
         {loading && (
-          <div className="flex justify-center items-center py-8">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+          <div className="py-12 text-center">
+            <p className="text-lg font-black uppercase font-mono animate-brutal-blink">
+              LOADING...
+            </p>
           </div>
         )}
 
-        {/* Error State */}
         {error && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-            {error}
+          <div className="brutal-box-red p-4 mb-4 text-sm font-black uppercase animate-brutal-shake">
+            ⚠ {error}
           </div>
         )}
 
-        {/* Empty State */}
         {!loading && !error && records.length === 0 && (
-          <div className="text-center py-8 text-gray-500">
-            No records yet
+          <div className="brutal-border bg-[#ffe600] p-10 text-center">
+            <p className="text-lg font-black uppercase">NO RECORDS YET</p>
+            <p className="text-xs font-bold mt-2 font-mono opacity-60">
+              // HIT &quot;ADD NEW&quot; TO CREATE ONE
+            </p>
           </div>
         )}
 
-        {/* Table */}
         {!loading && !error && records.length > 0 && (
-          <div className="overflow-x-auto">
-            <table className="w-full border-collapse border border-gray-300">
+          <div className="overflow-x-auto brutal-border">
+            <table className="w-full border-collapse">
               <thead>
-                <tr className="bg-gray-50">
+                <tr className="bg-black text-[#ffe600]">
                   {entity.fields.map((field) => (
                     <th
                       key={field.name}
-                      className="border border-gray-300 px-4 py-2 text-left font-medium text-gray-700"
+                      className="border-r-4 border-[#ffe600] px-4 py-3 text-left text-xs font-black uppercase tracking-wide last:border-r-0"
                     >
                       {field.label || field.name}
                     </th>
                   ))}
-                  <th className="border border-gray-300 px-4 py-2 text-left font-medium text-gray-700">
-                    Created At
+                  <th className="border-r-4 border-[#ffe600] px-4 py-3 text-left text-xs font-black uppercase tracking-wide">
+                    CREATED
                   </th>
-                  <th className="border border-gray-300 px-4 py-2 text-left font-medium text-gray-700">
-                    Actions
+                  <th className="px-4 py-3 text-left text-xs font-black uppercase tracking-wide">
+                    ACT
                   </th>
                 </tr>
               </thead>
               <tbody>
-                {records.map((record) => (
-                  <tr key={record.id} className="hover:bg-gray-50">
+                {records.map((record, rowIdx) => (
+                  <tr
+                    key={record.id}
+                    className={rowIdx % 2 === 0 ? 'bg-white' : 'bg-[#ffe600]/20'}
+                  >
                     {entity.fields.map((field) => (
                       <td
                         key={field.name}
-                        className="border border-gray-300 px-4 py-2 text-sm"
+                        className="border-t-4 border-black px-4 py-3 text-sm font-mono font-bold"
                       >
-                        {String(record.data[field.name] ?? '')}
+                        {String(record.data[field.name] ?? '—')}
                       </td>
                     ))}
-                    <td className="border border-gray-300 px-4 py-2 text-sm">
+                    <td className="border-t-4 border-black px-4 py-3 text-xs font-mono font-bold">
                       {formatDate(record.createdAt)}
                     </td>
-                    <td className="border border-gray-300 px-4 py-2">
+                    <td className="border-t-4 border-black px-4 py-3">
                       <button
                         onClick={() => handleDelete(record.id)}
-                        className="bg-red-500 hover:bg-red-600 text-white text-sm font-medium py-1 px-3 rounded transition-colors"
+                        className="brutal-btn px-3 py-1.5 text-[10px] bg-black text-[#ffe600]"
                       >
-                        Delete
+                        DEL
                       </button>
                     </td>
                   </tr>

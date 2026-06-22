@@ -36,18 +36,14 @@ export default function FormRenderer({ entity, appId, onSuccess }: FormRendererP
 
   useEffect(() => {
     const initialData: Record<string, unknown> = {}
-    entity.fields.forEach(field => {
+    entity.fields.forEach((field) => {
       initialData[field.name] = field.defaultValue ?? getDefaultValue(field)
     })
     setFormData(initialData)
   }, [entity.fields])
 
   const handleChange = (fieldName: string, value: unknown) => {
-    setFormData(prev => ({
-      ...prev,
-      [fieldName]: value
-    }))
-    // Clear messages when user starts typing
+    setFormData((prev) => ({ ...prev, [fieldName]: value }))
     if (error) setError(null)
     if (success) setSuccess(false)
   }
@@ -60,28 +56,24 @@ export default function FormRenderer({ entity, appId, onSuccess }: FormRendererP
     try {
       const response = await fetch(`/api/runtime/${appId}/${entity.name}`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(formData)
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
       })
 
       if (!response.ok) {
-        setError('Failed to save record')
+        setError('FAILED TO SAVE RECORD')
         return
       }
 
       setSuccess(true)
-      // Reset form to defaults
       const resetData: Record<string, unknown> = {}
-      entity.fields.forEach(field => {
+      entity.fields.forEach((field) => {
         resetData[field.name] = field.defaultValue ?? getDefaultValue(field)
       })
       setFormData(resetData)
       onSuccess?.()
-
     } catch (err) {
-      setError('Failed to save record')
+      setError('FAILED TO SAVE RECORD')
       console.error('Form submission error:', err)
     } finally {
       setLoading(false)
@@ -91,13 +83,11 @@ export default function FormRenderer({ entity, appId, onSuccess }: FormRendererP
   const renderField = (field: FieldConfig) => {
     const value = formData[field.name]
     const isEmpty = field.required && (value === '' || value === null || value === undefined)
-    const inputClassName = `border rounded px-3 py-2 w-full ${
-      isEmpty ? 'border-red-500' : 'border-gray-300'
-    } focus:outline-none focus:border-blue-500`
+    const inputClassName = `w-full px-3 py-2.5 font-mono text-sm font-bold bg-white brutal-border focus:outline-none focus:bg-[#ffe600]/30 ${
+      isEmpty ? 'border-[#ff2d2d] bg-red-50' : ''
+    }`
 
-    const handleFieldChange = (newValue: unknown) => {
-      handleChange(field.name, newValue)
-    }
+    const handleFieldChange = (newValue: unknown) => handleChange(field.name, newValue)
 
     switch (field.type) {
       case 'string':
@@ -114,7 +104,7 @@ export default function FormRenderer({ entity, appId, onSuccess }: FormRendererP
           <textarea
             value={String(value || '')}
             onChange={(e) => handleFieldChange(e.target.value)}
-            className={`${inputClassName} min-h-[100px]`}
+            className={`${inputClassName} min-h-[100px] resize-y`}
             rows={4}
           />
         )
@@ -133,7 +123,7 @@ export default function FormRenderer({ entity, appId, onSuccess }: FormRendererP
             type="checkbox"
             checked={Boolean(value)}
             onChange={(e) => handleFieldChange(e.target.checked)}
-            className="w-4 h-4"
+            className="w-5 h-5 brutal-border accent-black"
           />
         )
       case 'date':
@@ -173,38 +163,45 @@ export default function FormRenderer({ entity, appId, onSuccess }: FormRendererP
 
   return (
     <ErrorBoundary>
-      <div className="bg-white rounded-lg shadow-md p-6">
-        <h2 className="text-2xl font-bold mb-6">{entity.name} Form</h2>
-        
+      <div className="brutal-box brutal-shadow-lg p-6 bg-white">
+        <div className="flex items-center justify-between mb-6 pb-4 border-b-4 border-black">
+          <h2 className="text-xl font-black uppercase tracking-tight">
+            {entity.name} FORM
+          </h2>
+          <span className="brutal-tag bg-[#0040ff] text-white font-mono text-[10px]">
+            NEW
+          </span>
+        </div>
+
         {error && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-            {error}
+          <div className="brutal-box-red p-4 mb-4 text-sm font-black uppercase animate-brutal-shake">
+            ⚠ {error}
           </div>
         )}
-        
+
         {success && (
-          <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
-            Record saved successfully!
+          <div className="brutal-border bg-[#00ff66] text-black p-4 mb-4 text-sm font-black uppercase">
+            ✓ RECORD SAVED
           </div>
         )}
-        
-        <div role="form" className="space-y-4">
+
+        <div role="form" className="space-y-5">
           {entity.fields.map((field) => (
             <div key={field.name}>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-xs font-black uppercase tracking-wider mb-2">
                 {field.label || field.name}
-                {field.required && <span className="text-red-500 ml-1">*</span>}
+                {field.required && <span className="text-[#ff2d2d] ml-1">*</span>}
               </label>
               {renderField(field)}
             </div>
           ))}
-          
+
           <button
             onClick={handleSubmit}
             disabled={loading}
-            className="bg-blue-500 hover:bg-blue-600 disabled:bg-gray-400 text-white font-medium py-2 px-4 rounded transition-colors"
+            className="brutal-btn w-full sm:w-auto mt-2 px-8 py-4 text-sm bg-[#ff2d2d] text-white disabled:opacity-40"
           >
-            {loading ? 'Saving...' : 'Save Record'}
+            {loading ? '▓ SAVING... ▓' : '► SAVE RECORD'}
           </button>
         </div>
       </div>

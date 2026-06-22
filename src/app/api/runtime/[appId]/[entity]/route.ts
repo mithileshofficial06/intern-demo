@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
 type RouteParams = { params: Promise<{ appId: string, entity: string }> }
@@ -107,13 +107,13 @@ export async function POST(request: Request, { params }: RouteParams) {
   }
 }
 
-export async function DELETE(request: Request, { params }: RouteParams) {
+export async function DELETE(request: NextRequest, { params }: RouteParams) {
   try {
     // 1. Await params to get appId and entity
     const { appId, entity } = await params
 
     // 2. Get id from searchParams
-    const id = request.nextUrl?.searchParams.get('id')
+    const id = request.nextUrl.searchParams.get('id')
 
     // 3. Check if id is provided
     if (!id) {

@@ -31,34 +31,14 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
       }
 
       return (
-        <div
-          style={{
-            border: '1px solid #ef4444',
-            backgroundColor: '#fef2f2',
-            borderRadius: '8px',
-            padding: '16px',
-            margin: '16px 0'
-          }}
-        >
-          <h2 style={{ margin: '0 0 12px 0', fontSize: '18px', fontWeight: 'bold' }}>
-            Something went wrong
-          </h2>
-          <p style={{ margin: '0 0 16px 0', fontSize: '14px', color: '#6b7280' }}>
-            {this.state.error}
-          </p>
+        <div className="brutal-box-red brutal-shadow-lg p-6">
+          <h2 className="text-lg font-black uppercase mb-3">⚠ SOMETHING WENT WRONG</h2>
+          <p className="text-sm font-bold font-mono mb-5 opacity-90">{this.state.error}</p>
           <button
             onClick={() => this.setState({ hasError: false, error: '' })}
-            style={{
-              backgroundColor: '#ef4444',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              padding: '8px 16px',
-              cursor: 'pointer',
-              fontSize: '14px'
-            }}
+            className="brutal-btn px-5 py-2.5 text-xs bg-black text-[#ffe600]"
           >
-            Try again
+            TRY AGAIN
           </button>
         </div>
       )

@@ -2,10 +2,26 @@
 
 import { useState, useEffect } from 'react'
 import { useParams } from 'next/navigation'
+import Link from 'next/link'
 import { ValidatedConfig } from '@/types/config'
 import FormRenderer from '@/components/renderer/FormRenderer'
 import TableRenderer from '@/components/renderer/TableRenderer'
 import ErrorBoundary from '@/components/renderer/ErrorBoundary'
+
+function BrutalMarquee() {
+  const items = [...['LIVE APP', 'CRUD READY', 'JSON POWERED', 'APP FORGE'], ...['LIVE APP', 'CRUD READY', 'JSON POWERED', 'APP FORGE']]
+  return (
+    <div className="brutal-border bg-black text-[#ffe600] py-2 overflow-hidden border-x-0 shrink-0">
+      <div className="flex animate-brutal-marquee w-max gap-10">
+        {items.map((item, i) => (
+          <span key={i} className="text-xs font-black uppercase tracking-[0.25em] whitespace-nowrap font-mono">
+            ★ {item} ★
+          </span>
+        ))}
+      </div>
+    </div>
+  )
+}
 
 export default function AppPage() {
   const [config, setConfig] = useState<ValidatedConfig | null>(null)
@@ -20,28 +36,23 @@ export default function AppPage() {
     const fetchApp = async () => {
       try {
         const response = await fetch(`/api/runtime/${appId}`)
-        
         if (response.ok) {
           const data = await response.json()
           setConfig(data.config)
-          // Set active tab to first entity
           if (data.config?.entities?.length > 0) {
             setActiveTab(data.config.entities[0].name)
           }
         } else {
-          setError('App not found')
+          setError('APP NOT FOUND')
         }
       } catch (err) {
-        setError('Failed to load app')
+        setError('FAILED TO LOAD APP')
         console.error('Error loading app:', err)
       } finally {
         setLoading(false)
       }
     }
-
-    if (appId) {
-      fetchApp()
-    }
+    if (appId) fetchApp()
   }, [appId])
 
   const handleTabChange = (entityName: string) => {
@@ -49,129 +60,148 @@ export default function AppPage() {
     setActiveView('list')
   }
 
-  const handleAddNew = () => {
-    setActiveView('form')
-  }
-
-  const handleFormSuccess = () => {
-    setActiveView('list')
-  }
-
-  // Loading state
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500 mx-auto mb-4"></div>
-          <p className="text-white text-lg">Loading your app...</p>
+      <div className="min-h-screen bg-[#ffe600] flex flex-col">
+        <BrutalMarquee />
+        <div className="flex-1 flex items-center justify-center p-8">
+          <div className="brutal-box brutal-shadow-lg p-10 text-center bg-white">
+            <p className="text-2xl font-black uppercase tracking-tight animate-brutal-blink">
+              LOADING...
+            </p>
+            <p className="text-xs font-bold mt-3 font-mono uppercase tracking-widest opacity-60">
+              ▓▓▓▓▓▓▓▓▓▓
+            </p>
+          </div>
         </div>
       </div>
     )
   }
 
-  // Error state
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-red-400 text-xl mb-4">{error}</p>
-          <a 
-            href="/" 
-            className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded transition-colors"
-          >
-            Go Home
-          </a>
+      <div className="min-h-screen bg-[#ffe600] flex flex-col">
+        <BrutalMarquee />
+        <div className="flex-1 flex items-center justify-center p-8">
+          <div className="brutal-box-red brutal-shadow-lg p-10 text-center max-w-md">
+            <p className="text-xl font-black uppercase mb-6">⚠ {error}</p>
+            <Link href="/" className="brutal-btn inline-block px-6 py-3 bg-black text-[#ffe600] text-sm">
+              ← BACK HOME
+            </Link>
+          </div>
         </div>
       </div>
     )
   }
 
-  // Main app interface
   if (!config) return null
 
-  const currentEntity = config.entities.find(entity => entity.name === activeTab)
+  const currentEntity = config.entities.find((entity) => entity.name === activeTab)
 
   return (
-    <div className="min-h-screen bg-gray-900 flex flex-col">
-      {/* Navbar */}
-      <nav className="bg-gray-800 border-b border-gray-700 px-6 py-4">
-        <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold text-white">{config.app}</h1>
-          <span className="text-purple-400 font-medium">AppForge</span>
-        </div>
-      </nav>
+    <div className="min-h-screen flex flex-col bg-white">
+      <BrutalMarquee />
 
-      <div className="flex flex-1">
+      {/* Header */}
+      <header className="bg-[#ffe600] brutal-border border-t-0 border-x-0 px-6 py-4 shrink-0">
+        <div className="flex items-center justify-between gap-4">
+          <div className="flex items-center gap-4 min-w-0">
+            <Link
+              href="/"
+              className="brutal-btn shrink-0 px-3 py-2 text-xs bg-white text-black hidden sm:inline-block"
+            >
+              ← HOME
+            </Link>
+            <h1 className="text-xl sm:text-2xl font-black uppercase tracking-tight truncate">
+              {config.app}
+            </h1>
+          </div>
+          <div className="flex items-center gap-3 shrink-0">
+            <span className="brutal-tag bg-black text-[#ffe600] hidden sm:inline-block font-mono">
+              ID:{appId.slice(0, 6)}
+            </span>
+            <span className="font-black text-sm uppercase">
+              APP<span className="brutal-highlight">FORGE</span>
+            </span>
+          </div>
+        </div>
+      </header>
+
+      <div className="flex flex-col lg:flex-row flex-1 min-h-0">
         {/* Sidebar */}
-        <aside className="w-64 bg-gray-800 border-r border-gray-700 p-4">
-          <h2 className="text-white font-medium mb-4">Entities</h2>
-          <nav className="space-y-2">
+        <aside className="w-full lg:w-56 bg-[#ffe600] brutal-border border-t-0 border-l-0 border-b-0 shrink-0">
+          <div className="p-4 border-b-4 border-black">
+            <h2 className="text-xs font-black uppercase tracking-[0.2em]">► ENTITIES</h2>
+          </div>
+          <nav className="p-3 space-y-2">
             {config.entities.map((entity) => (
               <button
                 key={entity.name}
                 onClick={() => handleTabChange(entity.name)}
-                className={`w-full text-left px-3 py-2 rounded transition-colors ${
+                className={`brutal-btn w-full text-left px-3 py-3 text-xs ${
                   activeTab === entity.name
-                    ? 'bg-purple-600 text-white'
-                    : 'text-gray-300 hover:bg-gray-700 hover:text-white'
+                    ? 'bg-black text-[#ffe600]'
+                    : 'bg-white text-black hover:bg-black hover:text-[#ffe600]'
                 }`}
               >
-                {entity.name}
+                {activeTab === entity.name ? '■ ' : '□ '}
+                {entity.name.toUpperCase()}
               </button>
             ))}
           </nav>
         </aside>
 
-        {/* Main Content */}
-        <main className="flex-1 p-6">
+        {/* Main */}
+        <main className="flex-1 p-4 sm:p-6 bg-white relative min-w-0">
+          <div className="absolute inset-0 brutal-checker pointer-events-none" />
+
           {currentEntity && (
-            <>
-              {/* Toggle Buttons */}
-              <div className="mb-6">
-                <div className="flex gap-4">
-                  <button
-                    onClick={() => setActiveView('list')}
-                    className={`px-4 py-2 rounded transition-colors ${
-                      activeView === 'list'
-                        ? 'bg-purple-600 text-white'
-                        : 'bg-gray-700 text-gray-300 hover:bg-gray-600 hover:text-white'
-                    }`}
-                  >
-                    View Records
-                  </button>
-                  <button
-                    onClick={() => setActiveView('form')}
-                    className={`px-4 py-2 rounded transition-colors ${
-                      activeView === 'form'
-                        ? 'bg-purple-600 text-white'
-                        : 'bg-gray-700 text-gray-300 hover:bg-gray-600 hover:text-white'
-                    }`}
-                  >
-                    Add New
-                  </button>
-                </div>
+            <div className="relative z-10">
+              {/* View toggle */}
+              <div className="flex flex-wrap gap-3 mb-6">
+                <button
+                  onClick={() => setActiveView('list')}
+                  className={`brutal-btn px-4 py-2.5 text-xs ${
+                    activeView === 'list'
+                      ? 'bg-black text-[#ffe600]'
+                      : 'bg-white text-black'
+                  }`}
+                >
+                  ► VIEW RECORDS
+                </button>
+                <button
+                  onClick={() => setActiveView('form')}
+                  className={`brutal-btn px-4 py-2.5 text-xs ${
+                    activeView === 'form'
+                      ? 'bg-[#ff2d2d] text-white'
+                      : 'bg-white text-black'
+                  }`}
+                >
+                  + ADD NEW
+                </button>
               </div>
 
-              {/* Content Area */}
               <ErrorBoundary>
                 {activeView === 'list' ? (
                   <TableRenderer
                     entity={currentEntity}
                     appId={appId}
-                    onAddNew={handleAddNew}
+                    onAddNew={() => setActiveView('form')}
                   />
                 ) : (
                   <FormRenderer
                     entity={currentEntity}
                     appId={appId}
-                    onSuccess={handleFormSuccess}
+                    onSuccess={() => setActiveView('list')}
                   />
                 )}
               </ErrorBoundary>
-            </>
+            </div>
           )}
         </main>
       </div>
+
+      <BrutalMarquee />
     </div>
   )
 }

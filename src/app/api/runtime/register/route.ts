@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { Prisma } from '@prisma/client'
 import { prisma } from '@/lib/prisma'
 import { safeValidateConfig } from '@/lib/config-validator'
 
@@ -32,11 +33,13 @@ export async function POST(request: Request) {
     // Note: We're proceeding as nanoid is statistically unique enough
 
     // 5. Create new AppConfig record
+    // Serialize through JSON to produce a plain object Prisma can accept as InputJsonValue
+    const configJson = JSON.parse(JSON.stringify(config)) as Prisma.InputJsonValue
     await prisma.appConfig.create({
       data: {
         appId: config.appId,
         name: config.app,
-        config: config
+        config: configJson
       }
     })
 

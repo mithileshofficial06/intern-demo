@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
-import { motion } from 'framer-motion'
+import { motion, type Variants } from 'framer-motion'
 import { safeValidateConfig } from '@/lib/config-validator'
 
 import BackgroundEffects from '@/components/landing/BackgroundEffects'
@@ -95,7 +95,7 @@ const TEMPLATE_DATA: Record<string, string> = {
 }
 
 // Stagger container animation
-const staggerContainer = {
+const staggerContainer: Variants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
@@ -103,12 +103,12 @@ const staggerContainer = {
   },
 }
 
-const fadeSlideUp = {
+const fadeSlideUp: Variants = {
   hidden: { opacity: 0, y: 20 },
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] },
+    transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] as const },
   },
 }
 
@@ -246,7 +246,7 @@ export default function Home() {
         <motion.div
           initial={{ opacity: 0, x: 30 }}
           animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.7, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 0.7, delay: 0.2, ease: [0.22, 1, 0.36, 1] as const }}
           className="relative w-full lg:w-[68%] xl:w-[70%] bg-[#111] flex flex-col"
         >
           <div className="absolute inset-0 brutal-checker pointer-events-none opacity-50" />
