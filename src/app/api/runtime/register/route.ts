@@ -1,5 +1,4 @@
 import { NextResponse } from 'next/server'
-import { Prisma } from '@prisma/client'
 import { prisma } from '@/lib/prisma'
 import { safeValidateConfig } from '@/lib/config-validator'
 import { auth } from '@/auth'
@@ -66,7 +65,8 @@ export async function POST(request: Request) {
     const { config } = result
 
     // 5. Create new AppConfig record with user association
-    const configJson = JSON.parse(JSON.stringify(config)) as Prisma.InputJsonValue
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const configJson = JSON.parse(JSON.stringify(config)) as any
     await prisma.appConfig.create({
       data: {
         appId: config.appId,
