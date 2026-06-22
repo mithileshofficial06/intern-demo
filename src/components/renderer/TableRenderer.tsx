@@ -27,7 +27,7 @@ export default function TableRenderer({ entity, appId, onAddNew }: TableRenderer
 
     try {
       const response = await fetch(`/api/runtime/${appId}/${entity.name}`)
-      
+
       if (response.ok) {
         const data = await response.json()
         setRecords(data.records)

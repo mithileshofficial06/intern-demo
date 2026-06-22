@@ -1,14 +1,18 @@
 import { PrismaClient } from '@prisma/client'
+import { PrismaNeon } from '@prisma/adapter-neon'
+import { Pool } from '@neondatabase/serverless'
 
 declare global {
-  // eslint-disable-next-line no-var
   var prisma: PrismaClient | undefined
 }
 
-const prisma = globalThis.prisma || new PrismaClient()
+const pool = new Pool({ connectionString: process.env.DATABASE_URL! })
+const adapter = new PrismaNeon(pool)
 
-if (process.env.NODE_ENV === 'development') {
-  globalThis.prisma = prisma
+export const prisma = global.prisma || new PrismaClient({ adapter })
+
+if (process.env.NODE_ENV !== 'production') {
+  global.prisma = prisma
 }
 
-export { prisma }
+export default prisma
