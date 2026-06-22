@@ -3,6 +3,7 @@
 import { EntityConfig } from '@/types/config'
 import { useState, useEffect } from 'react'
 import ErrorBoundary from './ErrorBoundary'
+import { notify } from '@/lib/notifications'
 
 interface TableRendererProps {
   entity: EntityConfig
@@ -50,11 +51,14 @@ export default function TableRenderer({ entity, appId, onAddNew }: TableRenderer
         method: 'DELETE',
       })
       if (response.ok) {
+        notify.success(`Record removed from ${entity.name}`, 'DELETED')
         await fetchRecords()
       } else {
+        notify.error('Failed to delete record')
         setError('FAILED TO DELETE RECORD')
       }
     } catch (err) {
+      notify.error('Failed to delete record')
       setError('FAILED TO DELETE RECORD')
       console.error('Error deleting record:', err)
     }

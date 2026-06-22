@@ -117,6 +117,12 @@ export default function AppPage() {
             </h1>
           </div>
           <div className="flex items-center gap-3 shrink-0">
+            <Link
+              href={`/workflows/${appId}`}
+              className="brutal-btn px-3 py-2 text-xs bg-black text-[#ffe600] hover:bg-white hover:text-black"
+            >
+              ⚡ WORKFLOWS
+            </Link>
             <span className="brutal-tag bg-black text-[#ffe600] hidden sm:inline-block font-mono">
               ID:{appId.slice(0, 6)}
             </span>

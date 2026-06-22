@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { WorkflowEngine } from '@/lib/workflow-engine'
 
 type RouteParams = { params: Promise<{ appId: string, entity: string }> }
 
@@ -87,6 +88,18 @@ export async function POST(request: Request, { params }: RouteParams) {
       }
     })
 
+    // 4a. Trigger workflow: record.created
+    await WorkflowEngine.trigger({
+      trigger: 'record.created',
+      appId,
+      entityName: entity,
+      data: {
+        recordId: record.id,
+        entity,
+        ...data,
+      },
+    }).catch(err => console.error('Workflow trigger failed:', err))
+
     // 5. Return created record
     return NextResponse.json(
       {
@@ -124,12 +137,24 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
     }
 
     // 4. Delete Record
-    await prisma.record.delete({
+    const deletedRecord = await prisma.record.delete({
       where: {
         id,
         appId
       }
     })
+
+    // 4a. Trigger workflow: record.deleted
+    await WorkflowEngine.trigger({
+      trigger: 'record.deleted',
+      appId,
+      entityName: entity,
+      data: {
+        recordId: id,
+        entity,
+        deletedData: deletedRecord.data,
+      },
+    }).catch(err => console.error('Workflow trigger failed:', err))
 
     // 5. Return success message
     return NextResponse.json(

@@ -3,6 +3,7 @@
 import { EntityConfig, FieldConfig } from '@/types/config'
 import { useState, useEffect } from 'react'
 import ErrorBoundary from './ErrorBoundary'
+import { notify } from '@/lib/notifications'
 
 interface FormRendererProps {
   entity: EntityConfig
@@ -61,10 +62,12 @@ export default function FormRenderer({ entity, appId, onSuccess }: FormRendererP
       })
 
       if (!response.ok) {
+        notify.error('Failed to save record', `${entity.name.toUpperCase()} ERROR`)
         setError('FAILED TO SAVE RECORD')
         return
       }
 
+      notify.success(`Record added to ${entity.name}`, 'RECORD SAVED')
       setSuccess(true)
       const resetData: Record<string, unknown> = {}
       entity.fields.forEach((field) => {
@@ -73,6 +76,7 @@ export default function FormRenderer({ entity, appId, onSuccess }: FormRendererP
       setFormData(resetData)
       onSuccess?.()
     } catch (err) {
+      notify.error('Failed to save record')
       setError('FAILED TO SAVE RECORD')
       console.error('Form submission error:', err)
     } finally {
