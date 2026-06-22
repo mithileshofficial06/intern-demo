@@ -2,6 +2,7 @@ import { auth } from "@/auth"
 import { prisma } from "@/lib/prisma"
 import { redirect } from "next/navigation"
 import Link from "next/link"
+import { AppConfig } from "@prisma/client"
 import { DashboardHeader } from "@/components/auth/DashboardHeader"
 import BackgroundEffects from "@/components/landing/BackgroundEffects"
 import BrutalMarquee from "@/components/landing/BrutalMarquee"
@@ -88,7 +89,7 @@ export default async function DashboardPage() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {apps.map((app) => (
+            {apps.map((app: AppConfig) => (
               <Link
                 key={app.id}
                 href={`/${app.appId}`}
