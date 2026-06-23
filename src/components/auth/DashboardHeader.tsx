@@ -33,7 +33,10 @@ export function DashboardHeader({ user }: DashboardHeaderProps) {
 
       {/* Sign Out Button */}
       <button
-        onClick={() => signOut({ callbackUrl: '/' })}
+        onClick={async () => {
+          await signOut({ redirect: false })
+          window.location.href = '/'
+        }}
         className="px-3 py-1.5 bg-black text-[#ff2d2d] border-2 border-[#ff2d2d] text-[10px] font-mono font-black uppercase tracking-widest shadow-[2px_2px_0_#ff2d2d] hover:shadow-[4px_4px_0_#ff2d2d] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 transition-all cursor-pointer shrink-0"
       >
         SIGN OUT

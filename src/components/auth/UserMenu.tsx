@@ -89,9 +89,10 @@ export function UserMenu({ user }: UserMenuProps) {
               </Link>
 
               <button
-                onClick={() => {
+                onClick={async () => {
                   setIsOpen(false)
-                  signOut({ callbackUrl: "/" })
+                  await signOut({ redirect: false })
+                  window.location.href = "/"
                 }}
                 className="w-full flex items-center gap-3 p-3 hover:bg-red-50 hover:text-red-600 font-bold uppercase text-sm tracking-tight transition-all text-left"
               >
