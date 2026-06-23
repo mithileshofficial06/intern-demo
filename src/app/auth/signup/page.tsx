@@ -67,7 +67,7 @@ export default function SignUpPage() {
         setError("⚠ ACCOUNT CREATED — PLEASE SIGN IN")
         router.push("/auth/signin")
       } else {
-        router.push("/editor")
+        router.push("/dashboard")
         router.refresh()
       }
     } catch {
@@ -78,7 +78,7 @@ export default function SignUpPage() {
   }
 
   const handleGitHub = () => {
-    signIn("github", { callbackUrl: "/editor" })
+    signIn("github", { callbackUrl: "/dashboard" })
   }
 
   const passwordsMatch =

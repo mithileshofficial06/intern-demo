@@ -57,7 +57,7 @@ function SignInPanel() {
       if (result?.error) {
         setSigninError('⚠ INVALID EMAIL OR PASSWORD')
       } else {
-        router.push('/editor')
+        router.push('/dashboard')
         router.refresh()
       }
     } catch {
@@ -94,7 +94,7 @@ function SignInPanel() {
       if (result?.error) {
         setTab('signin')
       } else {
-        router.push('/editor')
+        router.push('/dashboard')
         router.refresh()
       }
     } catch {
@@ -104,7 +104,7 @@ function SignInPanel() {
     }
   }
 
-  const handleGitHub = () => signIn('github', { callbackUrl: '/editor' })
+  const handleGitHub = () => signIn('github', { callbackUrl: '/dashboard' })
 
   const passwordsMatch = signupData.confirm.length > 0 && signupData.password === signupData.confirm
 

@@ -28,7 +28,7 @@ export default function SignInPage() {
       if (result?.error) {
         setError("⚠ INVALID EMAIL OR PASSWORD")
       } else {
-        router.push('/editor')
+        router.push('/dashboard')
         router.refresh()
       }
     } catch {
@@ -39,7 +39,7 @@ export default function SignInPage() {
   }
 
   const handleGitHub = () => {
-    signIn("github", { callbackUrl: "/editor" })
+    signIn("github", { callbackUrl: "/dashboard" })
   }
 
   return (
