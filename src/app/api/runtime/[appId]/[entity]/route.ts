@@ -21,28 +21,61 @@ export async function GET(request: Request, { params }: RouteParams) {
       )
     }
 
-    // 3. Fetch all Record rows
-    const records = await prisma.record.findMany({
+    // 3. Fetch search, page and limit query params
+    const url = new URL(request.url)
+    const page = parseInt(url.searchParams.get('page') || '0', 10)
+    const limit = parseInt(url.searchParams.get('limit') || '0', 10)
+    const search = url.searchParams.get('search') || ''
+
+    // 4. Fetch all Record rows for filtering
+    let records = await prisma.record.findMany({
       where: {
         appId,
         entity
+      },
+      orderBy: {
+        createdAt: 'desc'
       }
     })
 
-    // 4. Return mapped records
+    // In-memory case-insensitive search filter
+    if (search.trim()) {
+      const searchLower = search.toLowerCase()
+      records = records.filter((rec) => {
+        const dataObj = (rec.data || {}) as Record<string, unknown>
+        return Object.values(dataObj).some((val) => 
+          String(val ?? '').toLowerCase().includes(searchLower)
+        )
+      })
+    }
+
+    const totalCount = records.length
+
+    // Paginate in-memory if page/limit > 0
+    if (page > 0 && limit > 0) {
+      const startIndex = (page - 1) * limit
+      records = records.slice(startIndex, startIndex + limit)
+    }
+
+    // 5. Return mapped records with pagination details
     return NextResponse.json(
       {
         records: records.map((record: { id: string; data: any; createdAt: Date }) => ({
           id: record.id,
           data: record.data,
           createdAt: record.createdAt
-        }))
+        })),
+        pagination: {
+          totalCount,
+          page,
+          limit,
+          totalPages: limit > 0 ? Math.ceil(totalCount / limit) : 1
+        }
       },
       { status: 200 }
     )
 
   } catch (error) {
-    // 5. Handle errors
     console.error('Error fetching records:', error)
     return NextResponse.json(
       { error: "Internal server error" },
@@ -111,8 +144,70 @@ export async function POST(request: Request, { params }: RouteParams) {
     )
 
   } catch (error) {
-    // 6. Handle errors
     console.error('Error creating record:', error)
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    )
+  }
+}
+
+export async function PATCH(request: Request, { params }: RouteParams) {
+  try {
+    const { appId, entity } = await params
+    const url = new URL(request.url)
+    const id = url.searchParams.get('id')
+
+    if (!id) {
+      return NextResponse.json(
+        { error: "Record ID required" },
+        { status: 400 }
+      )
+    }
+
+    const appConfig = await prisma.appConfig.findUnique({
+      where: { appId }
+    })
+
+    if (!appConfig) {
+      return NextResponse.json(
+        { error: "App not found" },
+        { status: 404 }
+      )
+    }
+
+    let data
+    try {
+      data = await request.json()
+    } catch {
+      return NextResponse.json(
+        { error: "Invalid JSON body" },
+        { status: 400 }
+      )
+    }
+
+    // Update Record
+    const record = await prisma.record.update({
+      where: {
+        id,
+        appId
+      },
+      data: {
+        data
+      }
+    })
+
+    return NextResponse.json(
+      {
+        id: record.id,
+        data: record.data,
+        createdAt: record.createdAt
+      },
+      { status: 200 }
+    )
+
+  } catch (error) {
+    console.error('Error updating record:', error)
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }
@@ -163,7 +258,6 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
     )
 
   } catch (error) {
-    // 6. Handle errors
     console.error('Error deleting record:', error)
     return NextResponse.json(
       { error: "Internal server error" },

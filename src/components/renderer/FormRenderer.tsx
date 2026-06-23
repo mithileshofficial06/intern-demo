@@ -9,9 +9,11 @@ interface FormRendererProps {
   entity: EntityConfig
   appId: string
   onSuccess?: () => void
+  recordId?: string
+  initialData?: Record<string, unknown>
 }
 
-export default function FormRenderer({ entity, appId, onSuccess }: FormRendererProps) {
+export default function FormRenderer({ entity, appId, onSuccess, recordId, initialData }: FormRendererProps) {
   const [formData, setFormData] = useState<Record<string, unknown>>({})
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -36,12 +38,16 @@ export default function FormRenderer({ entity, appId, onSuccess }: FormRendererP
   }
 
   useEffect(() => {
-    const initialData: Record<string, unknown> = {}
-    entity.fields.forEach((field) => {
-      initialData[field.name] = field.defaultValue ?? getDefaultValue(field)
-    })
-    setFormData(initialData)
-  }, [entity.fields])
+    if (recordId && initialData) {
+      setFormData(initialData)
+    } else {
+      const initialDataObj: Record<string, unknown> = {}
+      entity.fields.forEach((field) => {
+        initialDataObj[field.name] = field.defaultValue ?? getDefaultValue(field)
+      })
+      setFormData(initialDataObj)
+    }
+  }, [entity.fields, recordId, initialData])
 
   const handleChange = (fieldName: string, value: unknown) => {
     setFormData((prev) => ({ ...prev, [fieldName]: value }))
@@ -55,8 +61,13 @@ export default function FormRenderer({ entity, appId, onSuccess }: FormRendererP
     setSuccess(false)
 
     try {
-      const response = await fetch(`/api/runtime/${appId}/${entity.name}`, {
-        method: 'POST',
+      const url = recordId
+        ? `/api/runtime/${appId}/${entity.name}?id=${recordId}`
+        : `/api/runtime/${appId}/${entity.name}`
+      const method = recordId ? 'PATCH' : 'POST'
+
+      const response = await fetch(url, {
+        method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       })
@@ -67,13 +78,19 @@ export default function FormRenderer({ entity, appId, onSuccess }: FormRendererP
         return
       }
 
-      notify.success(`Record added to ${entity.name}`, 'RECORD SAVED')
+      notify.success(
+        recordId ? `Record updated in ${entity.name}` : `Record added to ${entity.name}`,
+        recordId ? 'RECORD UPDATED' : 'RECORD SAVED'
+      )
       setSuccess(true)
-      const resetData: Record<string, unknown> = {}
-      entity.fields.forEach((field) => {
-        resetData[field.name] = field.defaultValue ?? getDefaultValue(field)
-      })
-      setFormData(resetData)
+      
+      if (!recordId) {
+        const resetData: Record<string, unknown> = {}
+        entity.fields.forEach((field) => {
+          resetData[field.name] = field.defaultValue ?? getDefaultValue(field)
+        })
+        setFormData(resetData)
+      }
       onSuccess?.()
     } catch (err) {
       notify.error('Failed to save record')
@@ -170,10 +187,10 @@ export default function FormRenderer({ entity, appId, onSuccess }: FormRendererP
       <div className="brutal-box brutal-shadow-lg p-6 bg-white">
         <div className="flex items-center justify-between mb-6 pb-4 border-b-4 border-black">
           <h2 className="text-xl font-black uppercase tracking-tight">
-            {entity.name} FORM
+            {entity.name} {recordId ? 'EDIT FORM' : 'FORM'}
           </h2>
-          <span className="brutal-tag bg-[#0040ff] text-white font-mono text-[10px]">
-            NEW
+          <span className={`brutal-tag text-white font-mono text-[10px] ${recordId ? 'bg-purple-600' : 'bg-[#0040ff]'}`}>
+            {recordId ? 'EDIT' : 'NEW'}
           </span>
         </div>
 
@@ -205,7 +222,7 @@ export default function FormRenderer({ entity, appId, onSuccess }: FormRendererP
             disabled={loading}
             className="brutal-btn w-full sm:w-auto mt-2 px-8 py-4 text-sm bg-[#ff2d2d] text-white disabled:opacity-40"
           >
-            {loading ? '▓ SAVING... ▓' : '► SAVE RECORD'}
+            {loading ? '▓ SAVING... ▓' : recordId ? '► UPDATE RECORD' : '► SAVE RECORD'}
           </button>
         </div>
       </div>
