@@ -18,10 +18,10 @@ export default auth((req) => {
     return NextResponse.next()
   }
 
-  // Home page ("/") — if already logged in, redirect straight to editor
+  // Home page ("/") — if already logged in, redirect to dashboard
   if (isHome) {
     if (isLoggedIn) {
-      return NextResponse.redirect(new URL("/editor", req.url))
+      return NextResponse.redirect(new URL("/dashboard", req.url))
     }
     return NextResponse.next()
   }
