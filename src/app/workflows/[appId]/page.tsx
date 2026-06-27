@@ -93,12 +93,21 @@ export default function WorkflowsPage() {
       <div className="max-w-6xl mx-auto">
         <div className="flex items-center justify-between mb-8 pb-6 border-b-4 border-[#ffe600]">
           <div>
-            <Link
-              href={`/${appId}`}
-              className="text-sm font-mono text-[#ffe600]/60 hover:text-[#ffe600] mb-2 inline-block"
-            >
-              ← Back to App
-            </Link>
+            <div className="flex items-center gap-4 mb-2">
+              <Link
+                href="/dashboard"
+                className="text-sm font-mono text-[#ffe600]/60 hover:text-[#ffe600] inline-block"
+              >
+                ← Dashboard
+              </Link>
+              <span className="text-[#ffe600]/30">|</span>
+              <Link
+                href={`/${appId}`}
+                className="text-sm font-mono text-[#ffe600]/60 hover:text-[#ffe600] inline-block"
+              >
+                ← Back to App
+              </Link>
+            </div>
             <h1 className="text-4xl font-black uppercase tracking-tighter text-[#ffe600]">
               WORKFLOWS
             </h1>

@@ -85,8 +85,8 @@ export default function AppPage() {
         <div className="flex-1 flex items-center justify-center p-8">
           <div className="brutal-box-red brutal-shadow-lg p-10 text-center max-w-md">
             <p className="text-xl font-black uppercase mb-6">⚠ {error}</p>
-            <Link href="/" className="brutal-btn inline-block px-6 py-3 bg-black text-[#ffe600] text-sm">
-              ← BACK HOME
+            <Link href="/dashboard" className="brutal-btn inline-block px-6 py-3 bg-black text-[#ffe600] text-sm">
+              ← DASHBOARD
             </Link>
           </div>
         </div>
@@ -107,10 +107,10 @@ export default function AppPage() {
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-center gap-4 min-w-0">
             <Link
-              href="/"
+              href="/dashboard"
               className="brutal-btn shrink-0 px-3 py-2 text-xs bg-white text-black hidden sm:inline-block"
             >
-              ← HOME
+              ← DASHBOARD
             </Link>
             <h1 className="text-xl sm:text-2xl font-black uppercase tracking-tight truncate">
               {config.app}

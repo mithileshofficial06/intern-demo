@@ -37,15 +37,23 @@ export default async function DashboardPage() {
       {/* Header */}
       <header className="relative z-10 border-b-4 border-black bg-[#ffe600] text-black py-6 px-6 lg:px-12 shrink-0">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="text-[10px] font-mono font-black bg-black text-[#ffe600] px-2 py-0.5 tracking-wider uppercase">
-                // SYSTEM_CONTROL
-              </span>
+          <div className="flex items-center gap-4">
+            <Link
+              href="/"
+              className="px-3 py-2 bg-black text-[#ffe600] border-2 border-black font-black uppercase text-xs hover:bg-white hover:text-black transition-colors"
+            >
+              ← HOME
+            </Link>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] font-mono font-black bg-black text-[#ffe600] px-2 py-0.5 tracking-wider uppercase">
+                  // SYSTEM_CONTROL
+                </span>
+              </div>
+              <h1 className="text-3xl font-black tracking-tighter uppercase mt-1">
+                MY APPLICATIONS
+              </h1>
             </div>
-            <h1 className="text-3xl font-black tracking-tighter uppercase mt-1">
-              MY APPLICATIONS
-            </h1>
           </div>
           <DashboardHeader user={session.user} />
         </div>

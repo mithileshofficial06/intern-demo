@@ -1,7 +1,7 @@
 'use client'
 
-import { useState } from 'react'
-import { signIn } from 'next-auth/react'
+import { useState, useEffect } from 'react'
+import { signIn, useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { motion, type Variants } from 'framer-motion'
@@ -281,6 +281,32 @@ function SignInPanel() {
 
 // ── Main page ────────────────────────────────────────────────────
 export default function HomePage() {
+  const { data: session, status } = useSession()
+  const router = useRouter()
+
+  // Auto-redirect if already logged in
+  useEffect(() => {
+    if (status === 'authenticated') {
+      router.push('/dashboard')
+    }
+  }, [status, router])
+
+  // Show loading while checking auth
+  if (status === 'loading') {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-black">
+        <div className="text-[#ffe600] text-xl font-black uppercase animate-brutal-blink">
+          LOADING...
+        </div>
+      </div>
+    )
+  }
+
+  // Will redirect if authenticated
+  if (status === 'authenticated') {
+    return null
+  }
+
   return (
     <div className="min-h-screen flex flex-col bg-black">
       <BackgroundEffects />
