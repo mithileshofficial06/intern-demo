@@ -72,7 +72,7 @@ export default async function DashboardPage() {
             href="/editor"
             className="inline-block text-center px-6 py-3 bg-[#ffe600] text-black border-4 border-black font-black uppercase tracking-wider shadow-[4px_4px_0_#000] hover:shadow-[6px_6px_0_#ff2d2d] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 transition-all text-xs shrink-0"
           >
-            + Create New App
+            + CREATE NEW APP
           </Link>
         </div>
 
@@ -91,7 +91,7 @@ export default async function DashboardPage() {
                 href="/editor"
                 className="inline-block px-5 py-3 bg-[#ffe600] text-black border-2 border-black font-black uppercase text-xs tracking-widest shadow-[3px_3px_0_#000] hover:shadow-[5px_5px_0_#000] hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all"
               >
-                GO TO CONFIG EDITOR
+                + CREATE YOUR FIRST APP
               </Link>
             </div>
           </div>
